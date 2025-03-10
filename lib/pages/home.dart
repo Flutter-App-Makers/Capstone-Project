@@ -1,7 +1,6 @@
 import 'package:capstone_project/widgets/active_todo_slidable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:capstone_project/models/todo.dart';
 import 'package:capstone_project/pages/add.dart';
 import 'package:capstone_project/pages/completed.dart';
