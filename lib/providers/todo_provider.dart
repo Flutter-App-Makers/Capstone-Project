@@ -7,14 +7,27 @@ final todoProvider = StateNotifierProvider<TodoListNotifier, List<Todo>>((ref) {
 
 class TodoListNotifier extends StateNotifier<List<Todo>> {
   TodoListNotifier() : super([]);
+  static int currId = 0;
 
   void addTodo(String content) {
+    state = [
+      ...state,
+      Todo(
+        todoId: currId++,
+        content: content,
+        completed: false,
+      ),
+    ];
+  }
+
+  void addRecurrentTodo(String content) {
     state = [
       ...state,
       Todo(
         todoId: state.isEmpty ? 0 : state[state.length - 1].todoId + 1,
         content: content,
         completed: false,
+        recurrent: true,
       ),
     ];
   }
@@ -27,10 +40,15 @@ class TodoListNotifier extends StateNotifier<List<Todo>> {
             todoId: todo.todoId,
             content: todo.content,
             completed: true,
+            recurrent: todo.recurrent,
           )
         else
           todo
     ];
+  }
+
+  bool isComplete(int id) {
+    return state.firstWhere((todo) => todo.todoId == id).completed;
   }
 
   void deleteTodo(int id) {

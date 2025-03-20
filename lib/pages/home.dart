@@ -1,8 +1,10 @@
+import 'package:capstone_project/pages/add_recurrent_todo.dart';
+import 'package:capstone_project/pages/recurrent.dart';
 import 'package:capstone_project/widgets/active_todo_slidable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:capstone_project/models/todo.dart';
-import 'package:capstone_project/pages/add.dart';
+import 'package:capstone_project/pages/add_todo.dart';
 import 'package:capstone_project/pages/completed.dart';
 import 'package:capstone_project/providers/todo_provider.dart';
 
@@ -12,61 +14,115 @@ class MyHomePage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     List<Todo> todos = ref.watch(todoProvider);
-    List<Todo> activeTodos = todos.where((todo) => !todo.completed).toList();
-    List<Todo> completedTodos = todos.where((todo) => todo.completed).toList();
+    List<Todo> activeTodos =
+        todos.where((todo) => !todo.completed && !todo.recurrent).toList();
+    List<Todo> completedTodos =
+        todos.where((todo) => todo.completed && !todo.recurrent).toList();
+    List<Todo> recurrentTodos = todos.where((todo) => todo.recurrent).toList();
 
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text("Todo App"),
       ),
-      body: ListView.builder(
-        itemCount: activeTodos.length + 1,
-        itemBuilder: (context, index) {
-          if (activeTodos.isEmpty) {
-            return Padding(
-              padding: const EdgeInsets.only(top: 300.0),
-              child: const Center(
-                child: Text("Add a todo using the button below"),
-              ),
-            );
-          }
-
-          if (index == activeTodos.length) {
-            // display completed todos
-            if (completedTodos.isEmpty) {
-              // TODO - something more fun
-              return Container();
-            } else {
-              return Center(
-                child: TextButton(
-                  onPressed: () => Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => const CompletedTodo(),
-                    ),
-                  ),
-                  child: Text("Completed Todos"),
+      body: Center(
+        child: ListView.builder(
+          itemCount: activeTodos.length + 1,
+          itemBuilder: (context, index) {
+            if (activeTodos.isEmpty &&
+                recurrentTodos.isEmpty &&
+                completedTodos.isEmpty) {
+              return Padding(
+                padding: const EdgeInsets.only(top: 300.0),
+                child: const Center(
+                  child: Text("Add a todo using the button below"),
                 ),
               );
+            } else if (index == activeTodos.length) {
+              // Finished displaying all of the active todos
+              if (completedTodos.isNotEmpty && recurrentTodos.isNotEmpty) {
+                return Row(
+                  children: [
+                    Center(
+                      child: TextButton(
+                        onPressed: () => Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => const CompletedTodos(),
+                          ),
+                        ),
+                        child: Text("Completed Todos"),
+                      ),
+                    ),
+                    Center(
+                      child: TextButton(
+                        onPressed: () => Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => const RecurrentTodos(),
+                          ),
+                        ),
+                        child: Text("Recurrent Todos"),
+                      ),
+                    ),
+                  ],
+                );
+              } else if (completedTodos.isNotEmpty) {
+                return Center(
+                  child: TextButton(
+                    onPressed: () => Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => const CompletedTodos(),
+                      ),
+                    ),
+                    child: Text("Completed Todos"),
+                  ),
+                );
+              } else if (recurrentTodos.isNotEmpty) {
+                return Center(
+                  child: TextButton(
+                    onPressed: () => Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => const RecurrentTodos(),
+                      ),
+                    ),
+                    child: Text("Recurrent Todos"),
+                  ),
+                );
+              }
+            } else {
+              // Display active todos
+              return ActiveTodoSlidable(
+                index: index,
+                id: activeTodos[index].todoId,
+                name: activeTodos[index].content,
+              );
             }
-          } else {
-            return ActiveTodoSlidable(
-              index: index,
-              id: activeTodos[index].todoId,
-              name: activeTodos[index].content,
-            );
-          }
-        },
+            return null;
+          },
+        ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.of(context)
-              .push(MaterialPageRoute(builder: (context) => AddTodo()));
-        },
-        tooltip: 'Increment',
-        backgroundColor: Colors.black,
-        child: const Icon(Icons.add),
+      floatingActionButton: Row(
+        children: [
+          FloatingActionButton(
+            onPressed: () {
+              Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (context) => AddTodo()));
+            },
+            tooltip: 'Add Todo',
+            backgroundColor: Colors.black,
+            child: const Icon(Icons.add),
+          ),
+          FloatingActionButton(
+            onPressed: () {
+              Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => AddRecurrentTodo()));
+            },
+            tooltip: 'Add Recurrent Todo',
+            backgroundColor: Colors.black,
+            child: const Icon(Icons.add),
+          ),
+        ],
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 }

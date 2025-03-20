@@ -24,8 +24,10 @@ class AddTodo extends ConsumerWidget {
             ),
             TextButton(
               onPressed: () {
-                ref.read(todoProvider.notifier).addTodo(todoController.text);
-                Navigator.pop(context);
+                if (todoController.text.isNotEmpty) {
+                  ref.read(todoProvider.notifier).addTodo(todoController.text);
+                  Navigator.pop(context);
+                }
               },
               child: const Text("Add Todo"),
             ),
