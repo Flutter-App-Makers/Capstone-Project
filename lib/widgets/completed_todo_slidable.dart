@@ -1,4 +1,5 @@
 import 'package:capstone_project/providers/todo_provider.dart';
+import 'package:capstone_project/widgets/todo_list_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -36,8 +37,9 @@ class RecurrentTodoSlidable extends ConsumerWidget {
             Radius.circular(20),
           ),
         ),
-        child: ListTile(
-          title: Text(name),
+        child: TodoListTile(
+          id: id,
+          name: name,
         ),
       ),
     );

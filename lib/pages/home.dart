@@ -42,6 +42,7 @@ class MyHomePage extends ConsumerWidget {
               // Finished displaying all of the active todos
               if (completedTodos.isNotEmpty && recurrentTodos.isNotEmpty) {
                 return Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     Center(
                       child: TextButton(
@@ -91,7 +92,6 @@ class MyHomePage extends ConsumerWidget {
             } else {
               // Display active todos
               return ActiveTodoSlidable(
-                index: index,
                 id: activeTodos[index].todoId,
                 name: activeTodos[index].content,
               );
@@ -101,6 +101,7 @@ class MyHomePage extends ConsumerWidget {
         ),
       ),
       floatingActionButton: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           FloatingActionButton(
             onPressed: () {

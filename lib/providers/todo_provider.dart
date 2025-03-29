@@ -9,18 +9,19 @@ class TodoListNotifier extends StateNotifier<List<Todo>> {
   TodoListNotifier() : super([]);
   static int currId = 0;
 
-  void addTodo(String content) {
+  void addTodo(String content, TodoCategory category) {
     state = [
       ...state,
       Todo(
         todoId: currId++,
         content: content,
         completed: false,
+        category: category,
       ),
     ];
   }
 
-  void addRecurrentTodo(String content) {
+  void addRecurrentTodo(String content, TodoCategory category) {
     state = [
       ...state,
       Todo(
@@ -28,8 +29,13 @@ class TodoListNotifier extends StateNotifier<List<Todo>> {
         content: content,
         completed: false,
         recurrent: true,
+        category: category,
       ),
     ];
+  }
+
+  TodoCategory getCategory(int id) {
+    return state.firstWhere((todo) => todo.todoId == id).category;
   }
 
   void completeTodo(int id) {
@@ -41,6 +47,7 @@ class TodoListNotifier extends StateNotifier<List<Todo>> {
             content: todo.content,
             completed: true,
             recurrent: todo.recurrent,
+            category: todo.category,
           )
         else
           todo

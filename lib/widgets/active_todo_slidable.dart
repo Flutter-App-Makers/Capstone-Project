@@ -1,14 +1,14 @@
 import 'package:capstone_project/providers/todo_provider.dart';
+import 'package:capstone_project/widgets/todo_list_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
 class ActiveTodoSlidable extends ConsumerWidget {
-  final int index;
   final int id;
   final String name;
 
-  const ActiveTodoSlidable({super.key, required this.index, required this.id, required this.name});
+  const ActiveTodoSlidable({super.key, required this.id, required this.name});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -32,7 +32,7 @@ class ActiveTodoSlidable extends ConsumerWidget {
         children: [
           SlidableAction(
             onPressed: (context) =>
-                ref.watch(todoProvider.notifier).completeTodo(index),
+                ref.watch(todoProvider.notifier).completeTodo(id),
             backgroundColor: Colors.green,
             icon: Icons.check,
             borderRadius: const BorderRadius.all(
@@ -50,8 +50,9 @@ class ActiveTodoSlidable extends ConsumerWidget {
             Radius.circular(20),
           ),
         ),
-        child: ListTile(
-          title: Text(name),
+        child: TodoListTile(
+          id: id,
+          name: name,
         ),
       ),
     );

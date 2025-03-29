@@ -1,3 +1,5 @@
+import 'package:capstone_project/models/todo.dart';
+import 'package:capstone_project/widgets/todo_category_dropdown.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:capstone_project/providers/todo_provider.dart';
@@ -22,10 +24,11 @@ class AddRecurrentTodo extends ConsumerWidget {
                 ),
               ),
             ),
+            TodoCategoryDropdown(),
             TextButton(
               onPressed: () {
                 if (todoController.text.isNotEmpty) {
-                  ref.read(todoProvider.notifier).addRecurrentTodo(todoController.text);
+                  ref.read(todoProvider.notifier).addRecurrentTodo(todoController.text, stringToCategory[TodoCategoryDropdown.selectedCategory]!);
                   Navigator.pop(context);
                 }
               },
