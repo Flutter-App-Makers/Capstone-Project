@@ -73,6 +73,42 @@ final stringToCategory = {
   'Home Improvement': TodoCategory.homeImprovement,
 };
 
+final categoryToString = {
+  TodoCategory.work: 'Work',
+  TodoCategory.personal: 'Personal',
+  TodoCategory.shopping: 'Shopping',
+  TodoCategory.health: 'Health',
+  TodoCategory.travel: 'Travel',
+  TodoCategory.finance: 'Finance',
+  TodoCategory.education: 'Education',
+  TodoCategory.entertainment: 'Entertainment',
+  TodoCategory.home: 'Home',
+  TodoCategory.fitness: 'Fitness',
+  TodoCategory.hobbies: 'Hobbies',
+  TodoCategory.family: 'Family',
+  TodoCategory.friends: 'Friends',
+  TodoCategory.selfCare: 'Self Care',
+  TodoCategory.spirituality: 'Spirituality',
+  TodoCategory.community: 'Community',
+  TodoCategory.volunteering: 'Volunteering',
+  TodoCategory.pets: 'Pets',
+  TodoCategory.technology: 'Technology',
+  TodoCategory.fashion: 'Fashion',
+  TodoCategory.food: 'Food',
+  TodoCategory.sports: 'Sports',
+  TodoCategory.music: 'Music',
+  TodoCategory.art: 'Art',
+  TodoCategory.books: 'Books',
+  TodoCategory.movies: 'Movies',
+  TodoCategory.games: 'Games',
+  TodoCategory.photography: 'Photography',
+  TodoCategory.gardening: 'Gardening',
+  TodoCategory.crafts: 'Crafts',
+  TodoCategory.writing: 'Writing',
+  TodoCategory.cooking: 'Cooking',
+  TodoCategory.homeImprovement: 'Home Improvement',
+};
+
 final categoryToIcon = {
   TodoCategory.work: Icons.work,
   TodoCategory.personal: Icons.person,
@@ -116,6 +152,7 @@ class Todo {
   bool completed;
   bool recurrent;
   TodoCategory category;
+  Map<String, dynamic>? json;
 
   Todo({
     required this.todoId,
@@ -123,5 +160,13 @@ class Todo {
     required this.completed,
     required this.category,
     this.recurrent = false,
-  });
+  }) {
+    json = {
+      'todoId': todoId,
+      'content': content,
+      'completed': completed,
+      'category': categoryToString[category],
+      'recurrent': recurrent,
+    };
+  }
 }
