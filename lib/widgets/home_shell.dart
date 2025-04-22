@@ -68,6 +68,14 @@ class _HomeShellState extends ConsumerState<HomeShell> {
                 }();
               },
             ),
+            ListTile(
+              leading: const Icon(Icons.bar_chart),
+              title: const Text('View Stats'),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.pushNamed(context, '/stats');
+              },
+            ),
           ],
         ),
       ),

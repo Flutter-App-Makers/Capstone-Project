@@ -13,12 +13,12 @@ class MyHomePage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    List<Todo> todos = ref.watch(todoProvider);
-    List<Todo> activeTodos =
-        todos.where((todo) => !todo.completed && !todo.recurrent).toList();
-    List<Todo> completedTodos =
+    final todos = ref.watch(todoProvider);
+    final activeTodos =
+        todos.where((t) => !t.completed && !t.recurrent).toList();
+    final completedTodos =
         todos.where((todo) => todo.completed && !todo.recurrent).toList();
-    List<Todo> recurrentTodos = todos.where((todo) => todo.recurrent).toList();
+    final recurrentTodos = todos.where((todo) => todo.recurrent).toList();
 
     return HomeShell(
       body: activeTodos.isEmpty &&
