@@ -37,78 +37,6 @@ enum TodoCategory {
   other,
 }
 
-final stringToCategory = {
-  'Work': TodoCategory.work,
-  'Personal': TodoCategory.personal,
-  'Shopping': TodoCategory.shopping,
-  'Health': TodoCategory.health,
-  'Travel': TodoCategory.travel,
-  'Finance': TodoCategory.finance,
-  'Education': TodoCategory.education,
-  'Entertainment': TodoCategory.entertainment,
-  'Home': TodoCategory.home,
-  'Fitness': TodoCategory.fitness,
-  'Hobbies': TodoCategory.hobbies,
-  'Family': TodoCategory.family,
-  'Friends': TodoCategory.friends,
-  'Self Care': TodoCategory.selfCare,
-  'Spirituality': TodoCategory.spirituality,
-  'Community': TodoCategory.community,
-  'Volunteering': TodoCategory.volunteering,
-  'Pets': TodoCategory.pets,
-  'Technology': TodoCategory.technology,
-  'Fashion': TodoCategory.fashion,
-  'Food': TodoCategory.food,
-  'Sports': TodoCategory.sports,
-  'Music': TodoCategory.music,
-  'Art': TodoCategory.art,
-  'Books': TodoCategory.books,
-  'Movies': TodoCategory.movies,
-  'Games': TodoCategory.games,
-  'Photography': TodoCategory.photography,
-  'Gardening': TodoCategory.gardening,
-  'Crafts': TodoCategory.crafts,
-  'Writing': TodoCategory.writing,
-  'Cooking': TodoCategory.cooking,
-  'Home Improvement': TodoCategory.homeImprovement,
-};
-
-final categoryToString = {
-  TodoCategory.work: 'Work',
-  TodoCategory.personal: 'Personal',
-  TodoCategory.shopping: 'Shopping',
-  TodoCategory.health: 'Health',
-  TodoCategory.travel: 'Travel',
-  TodoCategory.finance: 'Finance',
-  TodoCategory.education: 'Education',
-  TodoCategory.entertainment: 'Entertainment',
-  TodoCategory.home: 'Home',
-  TodoCategory.fitness: 'Fitness',
-  TodoCategory.hobbies: 'Hobbies',
-  TodoCategory.family: 'Family',
-  TodoCategory.friends: 'Friends',
-  TodoCategory.selfCare: 'Self Care',
-  TodoCategory.spirituality: 'Spirituality',
-  TodoCategory.community: 'Community',
-  TodoCategory.volunteering: 'Volunteering',
-  TodoCategory.pets: 'Pets',
-  TodoCategory.technology: 'Technology',
-  TodoCategory.fashion: 'Fashion',
-  TodoCategory.food: 'Food',
-  TodoCategory.sports: 'Sports',
-  TodoCategory.music: 'Music',
-  TodoCategory.art: 'Art',
-  TodoCategory.books: 'Books',
-  TodoCategory.movies: 'Movies',
-  TodoCategory.games: 'Games',
-  TodoCategory.photography: 'Photography',
-  TodoCategory.gardening: 'Gardening',
-  TodoCategory.crafts: 'Crafts',
-  TodoCategory.writing: 'Writing',
-  TodoCategory.cooking: 'Cooking',
-  TodoCategory.homeImprovement: 'Home Improvement',
-};
-
 final categoryToIcon = {
   TodoCategory.work: Icons.work,
   TodoCategory.personal: Icons.person,
@@ -147,26 +75,38 @@ final categoryToIcon = {
 };
 
 class Todo {
-  int todoId;
-  String content;
-  bool completed;
-  bool recurrent;
-  TodoCategory category;
-  Map<String, dynamic>? json;
+  final int todoId;
+  final String content;
+  final bool completed;
+  final bool recurrent;
+  final TodoCategory category;
 
   Todo({
     required this.todoId,
     required this.content,
-    required this.completed,
-    required this.category,
+    this.completed = false,
     this.recurrent = false,
-  }) {
-    json = {
-      'todoId': todoId,
-      'content': content,
-      'completed': completed,
-      'category': categoryToString[category],
-      'recurrent': recurrent,
-    };
+    required this.category,
+  });
+
+  Map<String, dynamic> toJson() => {
+        'todoId': todoId,
+        'content': content,
+        'completed': completed,
+        'recurrent': recurrent,
+        'category': category.name,
+      };
+
+  factory Todo.fromJson(Map<String, dynamic> json) {
+    return Todo(
+      todoId: json['todoId'],
+      content: json['content'],
+      completed: json['completed'],
+      recurrent: json['recurrent'],
+      category: TodoCategory.values.firstWhere(
+        (e) => e.name == json['category'],
+        orElse: () => TodoCategory.other,
+      ),
+    );
   }
 }

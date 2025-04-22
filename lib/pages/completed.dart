@@ -4,8 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:capstone_project/models/todo.dart';
 import 'package:capstone_project/providers/todo_provider.dart';
 
-class CompletedTodos extends ConsumerWidget {
-  const CompletedTodos({super.key});
+class CompletedPage extends ConsumerWidget {
+  const CompletedPage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -29,7 +29,7 @@ class CompletedTodos extends ConsumerWidget {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.of(context).push(
-            MaterialPageRoute(builder: (context) => CompletedTodos()),
+            MaterialPageRoute(builder: (context) => CompletedPage()),
           );
         },
         tooltip: 'Increment',

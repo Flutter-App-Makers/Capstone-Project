@@ -1,5 +1,5 @@
-import 'package:capstone_project/models/todo.dart';
 import 'package:capstone_project/providers/todo_provider.dart';
+import 'package:capstone_project/utils/category_metadata.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -20,10 +20,11 @@ class TodoListTile extends ConsumerWidget {
             : Colors.grey,
       ),
       leading: Icon(
-        categoryToIcon[ref.watch(todoProvider.notifier).getCategory(id)],
-        color: ref.watch(todoProvider.notifier).isComplete(id)
-            ? Colors.green
-            : Colors.grey,
+        categoryIcons[ref.watch(todoProvider.notifier).getCategory(id)] ??
+            Icons.label,
+        color:
+            categoryColors[ref.watch(todoProvider.notifier).getCategory(id)] ??
+                Colors.grey,
         size: 30,
       ),
     );

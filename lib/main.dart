@@ -1,3 +1,5 @@
+import 'package:capstone_project/pages/add_recurrent_todo.dart';
+import 'package:capstone_project/pages/add_todo.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:capstone_project/pages/home.dart';
@@ -23,6 +25,11 @@ class MyApp extends StatelessWidget {
         ),
       ),
       home: MyHomePage(),
+      routes: {
+        '/addTodo': (context) => const AddTodo(),
+        '/addRecurrent': (context) =>
+            const AddRecurrentTodo(), // this page should exist too
+      },
     );
   }
 }

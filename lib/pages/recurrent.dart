@@ -4,8 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:capstone_project/models/todo.dart';
 import 'package:capstone_project/providers/todo_provider.dart';
 
-class RecurrentTodos extends ConsumerWidget {
-  const RecurrentTodos({super.key});
+class RecurrentPage extends ConsumerWidget {
+  const RecurrentPage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -28,7 +28,7 @@ class RecurrentTodos extends ConsumerWidget {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.of(context).push(
-            MaterialPageRoute(builder: (context) => RecurrentTodos()),
+            MaterialPageRoute(builder: (context) => RecurrentPage()),
           );
         },
         tooltip: 'Increment',

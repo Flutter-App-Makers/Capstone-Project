@@ -1,0 +1,51 @@
+import 'package:flutter/material.dart';
+import '../models/todo.dart';
+
+final categoryIcons = {
+  TodoCategory.work: Icons.work,
+  TodoCategory.personal: Icons.person,
+  TodoCategory.shopping: Icons.shopping_cart,
+  TodoCategory.health: Icons.local_hospital,
+  TodoCategory.travel: Icons.flight,
+  TodoCategory.finance: Icons.attach_money,
+  TodoCategory.education: Icons.school,
+  TodoCategory.entertainment: Icons.movie,
+  TodoCategory.home: Icons.home,
+  TodoCategory.fitness: Icons.fitness_center,
+  TodoCategory.hobbies: Icons.palette,
+  TodoCategory.family: Icons.family_restroom,
+  TodoCategory.friends: Icons.group,
+  TodoCategory.selfCare: Icons.spa,
+  TodoCategory.spirituality: Icons.self_improvement,
+  TodoCategory.community: Icons.groups,
+  TodoCategory.volunteering: Icons.volunteer_activism,
+  TodoCategory.pets: Icons.pets,
+  TodoCategory.technology: Icons.computer,
+  TodoCategory.fashion: Icons.checkroom,
+  TodoCategory.food: Icons.restaurant,
+  TodoCategory.sports: Icons.sports_soccer,
+  TodoCategory.music: Icons.music_note,
+  TodoCategory.art: Icons.brush,
+  TodoCategory.books: Icons.menu_book,
+  TodoCategory.movies: Icons.movie_filter,
+  TodoCategory.games: Icons.videogame_asset,
+  TodoCategory.photography: Icons.camera_alt,
+  TodoCategory.gardening: Icons.grass,
+  TodoCategory.crafts: Icons.cut,
+  TodoCategory.writing: Icons.edit,
+  TodoCategory.cooking: Icons.kitchen,
+  TodoCategory.homeImprovement: Icons.build,
+  TodoCategory.other: Icons.more_horiz,
+};
+
+final categoryColors = {
+  TodoCategory.work: Colors.blueGrey,
+  TodoCategory.personal: Colors.pinkAccent,
+  TodoCategory.shopping: Colors.orange,
+  TodoCategory.health: Colors.redAccent,
+  TodoCategory.fitness: Colors.green,
+  TodoCategory.hobbies: Colors.teal,
+  TodoCategory.music: Colors.purple,
+  TodoCategory.games: Colors.indigo,
+  // Feel free to expand this however you like!
+};

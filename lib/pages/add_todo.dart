@@ -1,15 +1,23 @@
+// lib/pages/add_todo.dart
 import 'package:capstone_project/models/todo.dart';
 import 'package:capstone_project/widgets/todo_category_dropdown.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:capstone_project/providers/todo_provider.dart';
 
-class AddTodo extends ConsumerWidget {
+class AddTodo extends ConsumerStatefulWidget {
   const AddTodo({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    TextEditingController todoController = TextEditingController();
+  ConsumerState<AddTodo> createState() => _AddTodoState();
+}
+
+class _AddTodoState extends ConsumerState<AddTodo> {
+  final TextEditingController todoController = TextEditingController();
+  TodoCategory _selectedCategory = TodoCategory.work;
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text("Add Todo")),
       body: Center(
@@ -24,11 +32,24 @@ class AddTodo extends ConsumerWidget {
                 ),
               ),
             ),
-            TodoCategoryDropdown(),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TodoCategoryDropdown(
+                selected: _selectedCategory,
+                onChanged: (newCat) {
+                  setState(() {
+                    _selectedCategory = newCat;
+                  });
+                },
+              ),
+            ),
             TextButton(
               onPressed: () {
                 if (todoController.text.isNotEmpty) {
-                  ref.read(todoProvider.notifier).addTodo(todoController.text, stringToCategory[TodoCategoryDropdown.selectedCategory]!);
+                  ref.read(todoProvider.notifier).addTodo(
+                        todoController.text,
+                        _selectedCategory,
+                      );
                   Navigator.pop(context);
                 }
               },

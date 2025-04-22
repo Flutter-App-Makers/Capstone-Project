@@ -61,4 +61,8 @@ class TodoListNotifier extends StateNotifier<List<Todo>> {
   void deleteTodo(int id) {
     state = state.where((todo) => todo.todoId != id).toList();
   }
+
+  void setTodos(List<Todo> newTodos) {
+    state = newTodos;
+  }
 }
