@@ -5,7 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
 class ActiveTodoSlidable extends ConsumerWidget {
-  final int id;
+  final String id;
   final String name;
 
   const ActiveTodoSlidable({super.key, required this.id, required this.name});
@@ -18,7 +18,7 @@ class ActiveTodoSlidable extends ConsumerWidget {
         children: [
           SlidableAction(
             onPressed: (context) =>
-                ref.watch(todoProvider.notifier).deleteTodo(id),
+                ref.watch(todoProvider.notifier).deleteTodo(int.parse(id)),
             backgroundColor: Colors.red,
             icon: Icons.delete,
             borderRadius: const BorderRadius.all(
@@ -32,7 +32,7 @@ class ActiveTodoSlidable extends ConsumerWidget {
         children: [
           SlidableAction(
             onPressed: (context) =>
-                ref.watch(todoProvider.notifier).completeTodo(id),
+                ref.watch(todoProvider.notifier).completeTodo(int.parse(id)),
             backgroundColor: Colors.green,
             icon: Icons.check,
             borderRadius: const BorderRadius.all(
@@ -51,7 +51,7 @@ class ActiveTodoSlidable extends ConsumerWidget {
           ),
         ),
         child: TodoListTile(
-          id: id,
+          id: int.parse(id),
           name: name,
         ),
       ),

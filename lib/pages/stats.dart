@@ -10,7 +10,7 @@ class StatsPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final todos = ref.watch(todoProvider);
     final total = todos.length;
-    final completed = todos.where((t) => t.completed).length;
+    final completed = todos.where((t) => t.isCompleted).length;
     final recurrent = todos.where((t) => t.recurrent).length;
     final completionRate = total == 0 ? 0 : ((completed / total) * 100).round();
 

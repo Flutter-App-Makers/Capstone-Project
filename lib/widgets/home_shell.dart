@@ -1,4 +1,5 @@
-// lib/widgets/home_shell.dart
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/todo_provider.dart';
@@ -31,42 +32,12 @@ class _HomeShellState extends ConsumerState<HomeShell> {
             ListTile(
               leading: const Icon(Icons.upload_file),
               title: const Text('Export Todos'),
-              onTap: () {
-                // NOTE: We capture context here before the async call.
-// Flutter's analyzer may warn about using context across async gaps,
-// but we guard access with `mounted`, so this is safe in practice.
-                final scaffoldContext = context;
-                final todos = ref.read(todoProvider);
-                exportTodos(todos);
-                if (mounted) {
-                  Navigator.pop(scaffoldContext);
-                  ScaffoldMessenger.of(scaffoldContext).showSnackBar(
-                    const SnackBar(content: Text('Todos exported!')),
-                  );
-                }
-              },
+              onTap: () => _exportTodos(context),
             ),
             ListTile(
               leading: const Icon(Icons.download),
               title: const Text('Import Todos'),
-              onTap: () {
-                // NOTE: We capture context here before the async call.
-// Flutter's analyzer may warn about using context across async gaps,
-// but we guard access with `mounted`, so this is safe in practice.
-                final scaffoldContext = context;
-                () async {
-                  final todos = await importTodos();
-                  ref.read(todoProvider.notifier).setTodos(todos);
-                  if (mounted) {
-                    // ignore: use_build_context_synchronously
-                    Navigator.pop(scaffoldContext);
-                    // ignore: use_build_context_synchronously
-                    ScaffoldMessenger.of(scaffoldContext).showSnackBar(
-                      const SnackBar(content: Text('Todos imported!')),
-                    );
-                  }
-                }();
-              },
+              onTap: () => _confirmAndImportTodos(context),
             ),
             ListTile(
               leading: const Icon(Icons.bar_chart),
@@ -89,8 +60,8 @@ class _HomeShellState extends ConsumerState<HomeShell> {
             onPressed: () {
               Navigator.pushNamed(context, '/addTodo');
             },
-            icon: Icon(Icons.add),
-            label: Text("Add Todo"),
+            icon: const Icon(Icons.add),
+            label: const Text("Add Todo"),
           ),
           const SizedBox(height: 10),
           FloatingActionButton.extended(
@@ -98,10 +69,107 @@ class _HomeShellState extends ConsumerState<HomeShell> {
             onPressed: () {
               Navigator.pushNamed(context, '/addRecurrent');
             },
-            icon: Icon(Icons.loop),
-            label: Text("Add Recurrent"),
+            icon: const Icon(Icons.loop),
+            label: const Text("Add Recurrent"),
           ),
         ],
+      ),
+    );
+  }
+
+  Future<void> _exportTodos(BuildContext context) async {
+    final scaffoldContext = context;
+
+    final confirm = await _showConfirmExportDialog(context);
+    if (confirm != true) {
+      if (mounted) Navigator.pop(scaffoldContext);
+      return;
+    }
+
+    final todos = ref.read(todoProvider);
+    await exportTodos(todos);
+
+    if (mounted) {
+      Navigator.pop(scaffoldContext);
+      ScaffoldMessenger.of(scaffoldContext).showSnackBar(
+        const SnackBar(content: Text('Todos exported!')),
+      );
+    }
+  }
+
+  Future<bool?> _showConfirmExportDialog(BuildContext context) {
+    return showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Confirm Export'),
+        content: const Text(
+            'Exporting will overwrite your existing task backup. Are you sure?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: const Text('Export'),
+          ),
+        ],
+      ),
+    );
+  }
+
+
+
+  Future<void> _confirmAndImportTodos(BuildContext context) async {
+    final scaffoldContext = context;
+
+    final confirm = await _showConfirmDialog(context);
+    if (confirm != true) {
+      if (mounted) Navigator.pop(scaffoldContext);
+      return;
+    }
+
+    _showLoadingDialog(context);
+
+    final todos = await importTodos();
+    await ref.read(todoProvider.notifier).setTodos(todos);
+
+    if (mounted) {
+      Navigator.pop(context); // Close loading spinner
+      Navigator.pop(scaffoldContext); // Close drawer
+      ScaffoldMessenger.of(scaffoldContext).showSnackBar(
+        const SnackBar(content: Text('Todos imported!')),
+      );
+    }
+  }
+
+  Future<bool?> _showConfirmDialog(BuildContext context) {
+    return showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Confirm Import'),
+        content: const Text(
+            'Importing will overwrite your current tasks. Are you sure?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: const Text('Import'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showLoadingDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => const Center(
+        child: CircularProgressIndicator(),
       ),
     );
   }

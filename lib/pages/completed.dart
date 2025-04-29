@@ -11,7 +11,7 @@ class CompletedPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     List<Todo> todos = ref.watch(todoProvider);
     List<Todo> completedTodos =
-        todos.where((todo) => todo.completed && !todo.recurrent).toList();
+        todos.where((todo) => todo.isCompleted && !todo.recurrent).toList();
 
     return Scaffold(
       appBar: AppBar(
@@ -22,7 +22,7 @@ class CompletedPage extends ConsumerWidget {
           itemCount: completedTodos.length,
           itemBuilder: (context, index) {
             return RecurrentTodoSlidable(
-              id: completedTodos[index].todoId,
+              id: int.parse(completedTodos[index].todoId),
               name: completedTodos[index].content,
             );
           }),

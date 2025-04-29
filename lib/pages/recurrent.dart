@@ -21,7 +21,7 @@ class RecurrentPage extends ConsumerWidget {
           itemCount: recurrentTodos.length,
           itemBuilder: (context, index) {
             return RecurrentTodoSlidable(
-              id: recurrentTodos[index].todoId,
+              id: int.parse(recurrentTodos[index].todoId),
               name: recurrentTodos[index].content,
             );
           }),

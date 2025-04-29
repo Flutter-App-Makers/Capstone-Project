@@ -4,7 +4,6 @@ import 'package:capstone_project/widgets/empty_todo_placeholder.dart';
 import 'package:capstone_project/widgets/navigation_row.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../models/todo.dart';
 import '../providers/todo_provider.dart';
 import '../widgets/home_shell.dart';
 
@@ -15,9 +14,9 @@ class MyHomePage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final todos = ref.watch(todoProvider);
     final activeTodos =
-        todos.where((t) => !t.completed && !t.recurrent).toList();
+        todos.where((t) => !t.isCompleted && !t.recurrent).toList();
     final completedTodos =
-        todos.where((todo) => todo.completed && !todo.recurrent).toList();
+        todos.where((todo) => todo.isCompleted && !todo.recurrent).toList();
     final recurrentTodos = todos.where((todo) => todo.recurrent).toList();
 
     return HomeShell(

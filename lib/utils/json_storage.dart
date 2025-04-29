@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'dart:convert';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
@@ -14,9 +16,16 @@ Future<File> getTodoFile() async {
 }
 
 Future<void> exportTodos(List<Todo> todos) async {
-  final file = await getTodoFile();
-  final jsonList = todos.map((todo) => todo.toJson()).toList();
-  await file.writeAsString(jsonEncode(jsonList));
+  try {
+    final directory = await getApplicationDocumentsDirectory();
+    final file = File('${directory.path}/todos.json');
+    final json = jsonEncode(todos.map((todo) => todo.toJson()).toList());
+
+    await file.writeAsString(json);
+    print('✅ Exported todos to: ${file.path}');
+  } catch (e) {
+    print('❌ Failed to export todos: $e');
+  }
 }
 
 Future<List<Todo>> importTodos() async {
