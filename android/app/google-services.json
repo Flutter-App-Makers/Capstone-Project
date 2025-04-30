@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "881565548808",
+    "project_id": "perfectly-plump-plums",
+    "storage_bucket": "perfectly-plump-plums.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:881565548808:android:4321cc030aeaf32d45ecbd",
+        "android_client_info": {
+          "package_name": "com.example.capstone_project"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA9vOcpTQC_tY1KpJxVkqN7Qa8jgKq7Hzg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:881565548808:android:4090e7f4327ebea345ecbd",
+        "android_client_info": {
+          "package_name": "com.example.mikey_twitter_clone"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA9vOcpTQC_tY1KpJxVkqN7Qa8jgKq7Hzg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -2,6 +2,8 @@ import 'package:capstone_project/models/todo.dart';
 import 'package:capstone_project/pages/add_recurrent_todo.dart';
 import 'package:capstone_project/pages/add_todo.dart';
 import 'package:capstone_project/pages/stats.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 import 'package:flutter/material.dart';
 import 'package:capstone_project/pages/home.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -9,14 +11,19 @@ import 'package:hive_flutter/hive_flutter.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Hive.initFlutter();
 
+  // Initialize Firebase
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
+  // Initialize Hive
+  await Hive.initFlutter();
   Hive.registerAdapter(TodoAdapter());
   Hive.registerAdapter(TodoCategoryAdapter());
-
   await Hive.openBox<Todo>('todos');
 
-  runApp(const MyApp());
+  runApp(const ProviderScope(child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {

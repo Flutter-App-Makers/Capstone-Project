@@ -2,6 +2,7 @@
 
 import 'dart:io';
 
+import 'package:capstone_project/utils/firebase_sync.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/todo_provider.dart';
@@ -49,6 +50,58 @@ class _HomeShellState extends ConsumerState<HomeShell> {
                 Navigator.pushNamed(context, '/stats');
               },
             ),
+            ListTile(
+              leading: const Icon(Icons.cloud_sync),
+              title: const Text('Sync with Cloud'),
+              onTap: () async {
+                Navigator.pop(context); // Close drawer first
+                _showLoadingDialog(context);
+                try {
+                  await ref.read(todoProvider.notifier).syncFromFirebase();
+                  if (mounted) {
+                    Navigator.pop(context); // Close loading spinner
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Cloud sync complete!')),
+                    );
+                  }
+                } catch (e) {
+                  if (mounted) {
+                    Navigator.pop(context); // Close loading spinner
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Cloud sync failed: $e')),
+                    );
+                  }
+                }
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.cloud_upload),
+              title: const Text('Publish to Cloud'),
+              onTap: () async {
+                Navigator.pop(context);
+                _showLoadingDialog(context);
+
+                try {
+                  final todos = ref.read(todoProvider);
+                  await FirebaseSync.publishAll(todos);
+                  if (mounted) {
+                    Navigator.pop(context);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                          content: Text('Cloud updated successfully!')),
+                    );
+                  }
+                } catch (e) {
+                  if (mounted) {
+                    Navigator.pop(context);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Cloud update failed: $e')),
+                    );
+                  }
+                }
+              },
+            ),
+
           ],
         ),
       ),
