@@ -1,4 +1,3 @@
-import 'package:capstone_project/utils/json_storage.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:capstone_project/models/todo.dart';
 import 'package:hive/hive.dart';
@@ -28,7 +27,6 @@ class TodoListNotifier extends StateNotifier<List<Todo>> {
       newTodo,
     ];
     Hive.box<Todo>('todos').add(newTodo);
-    await exportTodos(state);  // <--- Auto backup
   }
 
   Future<void> addRecurrentTodo(String content, TodoCategory category) async {
@@ -44,7 +42,6 @@ class TodoListNotifier extends StateNotifier<List<Todo>> {
       newTodo,
     ];
     Hive.box<Todo>('todos').add(newTodo);
-    await exportTodos(state);  // <--- Auto backup
   }
 
   TodoCategory getCategory(int id) {
@@ -73,8 +70,6 @@ class TodoListNotifier extends StateNotifier<List<Todo>> {
 
     todoToComplete.isCompleted = true;
     todoToComplete.save(); // 🛡️ Update in Hive to persist completion status
-
-    await exportTodos(state);  // <--- Auto backup
   }
 
   bool isComplete(int id) {
@@ -90,8 +85,6 @@ class TodoListNotifier extends StateNotifier<List<Todo>> {
     
     // Then remove from in-memory state too
     state = state.where((todo) => todo.todoId != id.toString()).toList();
-
-    await exportTodos(state);  // <--- Auto backup
   }
 
 
@@ -107,7 +100,5 @@ class TodoListNotifier extends StateNotifier<List<Todo>> {
     } else {
       currId = 0;
     }
-
-    await exportTodos(state);  // <--- Auto backup
   }
 }

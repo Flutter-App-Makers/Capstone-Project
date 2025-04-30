@@ -1,5 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/todo_provider.dart';
@@ -87,13 +89,20 @@ class _HomeShellState extends ConsumerState<HomeShell> {
     }
 
     final todos = ref.read(todoProvider);
-    await exportTodos(todos);
+    File? file = await exportTodos(todos);
 
     if (mounted) {
       Navigator.pop(scaffoldContext);
-      ScaffoldMessenger.of(scaffoldContext).showSnackBar(
-        const SnackBar(content: Text('Todos exported!')),
-      );
+      if (file == null) {
+        ScaffoldMessenger.of(scaffoldContext).showSnackBar(
+          const SnackBar(content: Text('Failed to export todos')),
+        );
+        return;
+      } else {
+        ScaffoldMessenger.of(scaffoldContext).showSnackBar(
+          SnackBar(content: Text('Todos exported to: ${file.path}')),
+        );
+      }
     }
   }
 
@@ -118,8 +127,6 @@ class _HomeShellState extends ConsumerState<HomeShell> {
     );
   }
 
-
-
   Future<void> _confirmAndImportTodos(BuildContext context) async {
     final scaffoldContext = context;
 
@@ -132,14 +139,23 @@ class _HomeShellState extends ConsumerState<HomeShell> {
     _showLoadingDialog(context);
 
     final todos = await importTodos();
-    await ref.read(todoProvider.notifier).setTodos(todos);
-
-    if (mounted) {
-      Navigator.pop(context); // Close loading spinner
-      Navigator.pop(scaffoldContext); // Close drawer
-      ScaffoldMessenger.of(scaffoldContext).showSnackBar(
-        const SnackBar(content: Text('Todos imported!')),
-      );
+    if (todos != null) {
+      await ref.read(todoProvider.notifier).setTodos(todos);
+      if (mounted) {
+        Navigator.pop(context); // Close loading spinner
+        Navigator.pop(scaffoldContext); // Close drawer
+        ScaffoldMessenger.of(scaffoldContext).showSnackBar(
+          const SnackBar(content: Text('Todos imported!')),
+        );
+      }
+    } else {
+      if (mounted) {
+        Navigator.pop(context); // Close loading spinner
+        Navigator.pop(scaffoldContext); // Close drawer
+        ScaffoldMessenger.of(scaffoldContext).showSnackBar(
+          const SnackBar(content: Text('Import canceled.')),
+        );
+      }
     }
   }
 
