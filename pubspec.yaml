@@ -35,27 +35,12 @@ dependencies:
 
   firebase_core:
     version: ^2.27.0
-    default_platform: false
-    macos:
-      pluginClass: none
-    ios:
-      pluginClass: none
 
   cloud_firestore:
     version: ^4.8.5
-    default_platform: false
-    macos:
-      pluginClass: none
-    ios:
-      pluginClass: none
 
   firebase_auth:
     version: ^4.17.5
-    default_platform: false
-    macos:
-      pluginClass: none
-    ios:
-      pluginClass: none
 
   flutter:
     sdk: flutter
