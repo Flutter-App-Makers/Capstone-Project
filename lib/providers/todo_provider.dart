@@ -8,6 +8,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:capstone_project/models/todo.dart';
 import 'package:hive/hive.dart';
 
+final isSyncingProvider = StateProvider<bool>((ref) => false);
+
 final todoProvider = StateNotifierProvider<TodoListNotifier, List<Todo>>((ref) {
   return TodoListNotifier();
 });
@@ -34,7 +36,9 @@ class TodoListNotifier extends StateNotifier<List<Todo>> {
     // ☁️ Upload to Firebase
     try {
       if (kIsWeb || Platform.isAndroid) {
-        await FirebaseSync.uploadTodo(newTodo);
+        final firebaseSync = await FirebaseSync.create();
+        print("📤 Attempting to upload todo: ${newTodo.content}");
+        await firebaseSync.uploadTodo(newTodo);
       }
     } catch (e) {
       print("Firebase update failed: $e");
@@ -56,7 +60,9 @@ class TodoListNotifier extends StateNotifier<List<Todo>> {
     // ☁️ Upload to Firebase
     try {
       if (kIsWeb || Platform.isAndroid) {
-        await FirebaseSync.uploadTodo(newTodo);
+        final firebaseSync = await FirebaseSync.create();
+        print("📤 Attempting to upload todo: ${newTodo.content}");
+        await firebaseSync.uploadTodo(newTodo);
       }
     } catch (e) {
       print("Firebase update failed: $e");
@@ -96,7 +102,9 @@ class TodoListNotifier extends StateNotifier<List<Todo>> {
     if (updatedTodo != null) {
       try {
         if (kIsWeb || Platform.isAndroid) {
-          await FirebaseSync.uploadTodo(updatedTodo);
+          final firebaseSync = await FirebaseSync.create();
+          print("📤 Attempting to upload todo: ${updatedTodo.content}");
+          await firebaseSync.uploadTodo(updatedTodo);
         }
       } catch (e) {
         print("Firebase update failed: $e");
@@ -121,8 +129,11 @@ class TodoListNotifier extends StateNotifier<List<Todo>> {
 
   Future<void> syncFromFirebase() async {
     try {
-      final todos = await FirebaseSync.fetchTodos();
+      final firebaseSync = await FirebaseSync.create();
+      
+      final todos = await firebaseSync.syncFromCloud();
       state = todos;
+      print("✅ Todos assigned to state with ${todos.length} items");
 
       // Optional: Overwrite Hive
       final box = Hive.box<Todo>('todos');
@@ -152,5 +163,17 @@ class TodoListNotifier extends StateNotifier<List<Todo>> {
     } else {
       currId = 0;
     }
+
+    // ✅ Add Hive sync
+    final box = Hive.box<Todo>('todos');
+    print("🧹 Clearing Hive...");
+    await box.clear();
+    print("📦 Writing ${newTodos.length} todos to Hive...");
+    await box.putAll({for (final todo in newTodos) todo.todoId: todo});
+  }
+
+  Future<void> publishToFirebase() async {
+    final firebase = await FirebaseSync.create();
+    await firebase.publishAll(state);
   }
 }

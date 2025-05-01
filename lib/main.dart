@@ -6,7 +6,7 @@ import 'package:capstone_project/models/todo.dart';
 import 'package:capstone_project/pages/add_recurrent_todo.dart';
 import 'package:capstone_project/pages/add_todo.dart';
 import 'package:capstone_project/pages/stats.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:capstone_project/root_gate.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'firebase_options.dart';
@@ -25,8 +25,6 @@ void main() async {
       await Firebase.initializeApp(
         options: DefaultFirebaseOptions.currentPlatform,
       );
-      final userCreds = await FirebaseAuth.instance.signInAnonymously();
-      print('🔥 Signed in anonymously as UID: ${userCreds.user?.uid}');
     } catch (e) {
       print('Firebase init failed: $e');
     }
@@ -38,7 +36,7 @@ void main() async {
   Hive.registerAdapter(TodoCategoryAdapter());
   await Hive.openBox<Todo>('todos');
 
-  runApp(const ProviderScope(child: MyApp()));
+  runApp(const ProviderScope(child: RootGate()));
   print(' Running app...');
 }
 

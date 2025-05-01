@@ -1,11 +1,12 @@
-// ignore_for_file: use_build_context_synchronously
+// ignore_for_file: use_build_context_synchronously, avoid_print
 
 import 'dart:io';
 
-import 'package:capstone_project/utils/firebase_sync.dart';
+import 'package:capstone_project/root_gate.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/todo_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../utils/json_storage.dart';
 
 class HomeShell extends ConsumerStatefulWidget {
@@ -18,6 +19,17 @@ class HomeShell extends ConsumerStatefulWidget {
 
 class _HomeShellState extends ConsumerState<HomeShell> {
   @override
+  void initState() {
+    super.initState();
+    Future.microtask(() async {
+      final isSyncing = ref.read(isSyncingProvider.notifier);
+      isSyncing.state = true;
+      await ref.read(todoProvider.notifier).syncFromFirebase();
+      isSyncing.state = false;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -27,10 +39,30 @@ class _HomeShellState extends ConsumerState<HomeShell> {
       drawer: Drawer(
         child: ListView(
           children: [
-            const DrawerHeader(
-              decoration: BoxDecoration(color: Colors.blueAccent),
-              child: Text('Menu',
-                  style: TextStyle(fontSize: 24, color: Colors.white)),
+            DrawerHeader(
+              decoration: const BoxDecoration(color: Colors.blueAccent),
+              child: FutureBuilder<String?>(
+                future: _getUsername(),
+                builder: (context, snapshot) {
+                  final name = snapshot.data ?? "Guest";
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      const Text('Welcome back,',
+                          style:
+                              TextStyle(fontSize: 18, color: Colors.white70)),
+                      Text(
+                        name,
+                        style: const TextStyle(
+                            fontSize: 24,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ],
+                  );
+                },
+              ),
             ),
             ListTile(
               leading: const Icon(Icons.upload_file),
@@ -54,58 +86,101 @@ class _HomeShellState extends ConsumerState<HomeShell> {
               leading: const Icon(Icons.cloud_sync),
               title: const Text('Sync with Cloud'),
               onTap: () async {
-                Navigator.pop(context); // Close drawer first
-                _showLoadingDialog(context);
-                try {
-                  await ref.read(todoProvider.notifier).syncFromFirebase();
-                  if (mounted) {
-                    Navigator.pop(context); // Close loading spinner
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Cloud sync complete!')),
-                    );
-                  }
-                } catch (e) {
-                  if (mounted) {
-                    Navigator.pop(context); // Close loading spinner
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Cloud sync failed: $e')),
-                    );
-                  }
-                }
+                Navigator.pop(context); // Close drawer
+
+                // Capture a clean dialog context via showDialog
+                showDialog(
+                  context: context,
+                  barrierDismissible: false,
+                  builder: (dialogContext) {
+                    // Immediately show loading spinner
+                    Future.microtask(() async {
+                      final isSyncing = ref.read(isSyncingProvider.notifier);
+                      try {
+                        isSyncing.state = true;
+                        await ref
+                            .read(todoProvider.notifier)
+                            .syncFromFirebase();
+                        if (mounted) {
+                          Navigator.pop(dialogContext); // close loading
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                                content: Text('Cloud sync complete!')),
+                          );
+                        }
+                      } catch (e) {
+                        print("🔥 Sync from cloud failed: $e");
+                        if (mounted) {
+                          Navigator.pop(dialogContext); // close loading
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('Cloud sync failed: $e')),
+                          );
+                        }
+                      } finally {
+                        isSyncing.state = false;
+                      }
+                    });
+                    return const Center(child: CircularProgressIndicator());
+                  },
+                );
               },
             ),
             ListTile(
-              leading: const Icon(Icons.cloud_upload),
+              leading: const Icon(Icons.publish),
               title: const Text('Publish to Cloud'),
               onTap: () async {
-                Navigator.pop(context);
-                _showLoadingDialog(context);
+                Navigator.pop(context); // Close drawer
 
-                try {
-                  final todos = ref.read(todoProvider);
-                  await FirebaseSync.publishAll(todos);
-                  if (mounted) {
-                    Navigator.pop(context);
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                          content: Text('Cloud updated successfully!')),
-                    );
-                  }
-                } catch (e) {
-                  if (mounted) {
-                    Navigator.pop(context);
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Cloud update failed: $e')),
-                    );
-                  }
-                }
+                showDialog(
+                  context: context,
+                  barrierDismissible: false,
+                  builder: (dialogContext) {
+                    Future.microtask(() async {
+                      final isSyncing = ref.read(isSyncingProvider.notifier);
+                      try {
+                        isSyncing.state = true;
+                        await ref
+                            .read(todoProvider.notifier)
+                            .publishToFirebase();
+                        if (mounted) {
+                          Navigator.pop(dialogContext); // Close loading spinner
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                                content: Text('Published to cloud!')),
+                          );
+                        }
+                      } catch (e) {
+                        print("🔥 Publish to cloud failed: $e");
+                        if (mounted) {
+                          Navigator.pop(dialogContext);
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('Publish failed: $e')),
+                          );
+                        }
+                      } finally {
+                        isSyncing.state = false;
+                      }
+                    });
+
+                    return const Center(child: CircularProgressIndicator());
+                  },
+                );
               },
             ),
-
+            ListTile(
+              leading: const Icon(Icons.logout),
+              title: const Text('Sign Out'),
+              onTap: () async {
+                Navigator.pop(context); // close drawer
+                await _signOut(context);
+              },
+            ),
           ],
         ),
       ),
-      body: widget.body,
+      body: ref.watch(isSyncingProvider)
+          ? const Center(child: CircularProgressIndicator())
+          : widget.body,
       floatingActionButton: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.end,
@@ -242,4 +317,30 @@ class _HomeShellState extends ConsumerState<HomeShell> {
       ),
     );
   }
+
+  Future<void> _signOut(BuildContext context) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.remove('username');
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Signed out successfully!')),
+      );
+
+      Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (_) => const RootGate()),
+        (_) => false,
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Sign out failed: $e')),
+      );
+    }
+  }
+
+  Future<String?> _getUsername() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('username');
+  }
+
 }
