@@ -1,8 +1,11 @@
 // ignore_for_file: use_build_context_synchronously, avoid_print
 
 import 'dart:io';
+import 'dart:math';
 
 import 'package:capstone_project/root_gate.dart';
+import 'package:capstone_project/widgets/catchable_fish.dart';
+import 'package:capstone_project/widgets/fish_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/todo_provider.dart';
@@ -14,10 +17,12 @@ class HomeShell extends ConsumerStatefulWidget {
   const HomeShell({super.key, required this.body});
 
   @override
-  ConsumerState<HomeShell> createState() => _HomeShellState();
+  ConsumerState<HomeShell> createState() => HomeShellState();
 }
 
-class _HomeShellState extends ConsumerState<HomeShell> {
+class HomeShellState extends ConsumerState<HomeShell> {
+  final Map<String, GlobalKey<CatchableFishState>> fishKeys = {};
+
   @override
   void initState() {
     super.initState();
@@ -31,10 +36,12 @@ class _HomeShellState extends ConsumerState<HomeShell> {
 
   @override
   Widget build(BuildContext context) {
+    final todos = ref.watch(todoProvider).where((t) => !t.isCompleted).toList();
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: const Text("Todo App"),
+        title: const Text("Tacklebox"),
       ),
       drawer: Drawer(
         child: ListView(
@@ -180,7 +187,36 @@ class _HomeShellState extends ConsumerState<HomeShell> {
       ),
       body: ref.watch(isSyncingProvider)
           ? const Center(child: CircularProgressIndicator())
-          : widget.body,
+          : Stack(
+              children: [
+                // Only spawn fish for active TODOs
+                ...List.generate(todos.length, (i) {
+                  final todo = todos[i];
+                  final key = fishKeys.putIfAbsent(
+                    todo.todoId,
+                    () => GlobalKey<CatchableFishState>(),
+                  );
+
+                  final double spacing =
+                      MediaQuery.of(context).size.height / (todos.length + 1);
+                  return CatchableFish(
+                    key: key,
+                    center: Offset(
+                      100 + Random().nextDouble() * 200,
+                      spacing * (i + 1),
+                    ),
+                    radius: 30 + Random().nextDouble() * 20,
+                    swimDuration: Duration(seconds: 3 + Random().nextInt(3)),
+                    onCaught: () {
+                      // optional: show sparkle or sound
+                    },
+                  );
+                }),
+
+                // Your real body
+                widget.body,
+              ],
+            ),
       floatingActionButton: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.end,

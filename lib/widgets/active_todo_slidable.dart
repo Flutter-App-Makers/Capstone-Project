@@ -1,4 +1,5 @@
 import 'package:capstone_project/providers/todo_provider.dart';
+import 'package:capstone_project/widgets/home_shell.dart';
 import 'package:capstone_project/widgets/todo_list_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -31,8 +32,17 @@ class ActiveTodoSlidable extends ConsumerWidget {
         motion: ScrollMotion(),
         children: [
           SlidableAction(
-            onPressed: (context) =>
-                ref.watch(todoProvider.notifier).completeTodo(int.parse(id)),
+            onPressed: (context) async {
+              final key = (context.findAncestorStateOfType<HomeShellState>())
+                  ?.fishKeys[id];
+
+              if (key != null && key.currentState != null) {
+                key.currentState!.catchFish();
+                await Future.delayed(const Duration(seconds: 2));
+              }
+
+              await ref.read(todoProvider.notifier).completeTodo(int.parse(id));
+            },
             backgroundColor: Colors.green,
             icon: Icons.check,
             borderRadius: const BorderRadius.all(
