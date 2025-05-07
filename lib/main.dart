@@ -6,6 +6,7 @@ import 'package:capstone_project/models/todo.dart';
 import 'package:capstone_project/pages/add_todo.dart';
 import 'package:capstone_project/pages/stats.dart';
 import 'package:capstone_project/root_gate.dart';
+import 'package:capstone_project/theme/theme.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
@@ -24,7 +25,7 @@ void main() async {
       await Firebase.initializeApp(
         options: DefaultFirebaseOptions.currentPlatform,
       );
-      await FirebaseAuth.instance.signInAnonymously(); // 🔥 Add this
+      await FirebaseAuth.instance.signInAnonymously();
       print('✅ Signed in anonymously');
     } catch (e) {
       print('Firebase init failed: $e');
@@ -46,17 +47,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return ProviderScope(
       child: MaterialApp(
-        theme: ThemeData(
-          appBarTheme: const AppBarTheme(
-            iconTheme: IconThemeData(color: Colors.black),
-            backgroundColor: Colors.transparent,
-            titleTextStyle: TextStyle(
-              color: Colors.black,
-              fontWeight: FontWeight.bold,
-              fontSize: 18,
-            ),
-          ),
-        ),
+        theme: ghibliTheme,
         home: MyHomePage(),
         routes: {
           '/addTodo': (context) => const AddTodo(),

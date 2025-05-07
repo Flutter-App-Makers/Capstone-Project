@@ -10,7 +10,7 @@ class CatchableFish extends StatefulWidget {
   const CatchableFish({
     super.key,
     required this.center,
-    this.radius = 30,
+    this.radius = 60,
     this.swimDuration = const Duration(seconds: 4),
     this.onCaught,
   });

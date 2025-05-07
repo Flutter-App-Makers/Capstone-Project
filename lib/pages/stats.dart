@@ -15,11 +15,30 @@ class StatsPage extends ConsumerWidget {
     final total = todos.length;
     final completed = completedTodos.length;
     final completionRate = total == 0 ? 0 : ((completed / total) * 100).round();
+    final random = Random();
 
     return Scaffold(
       appBar: AppBar(title: const Text("Stats")),
       body: Stack(
         children: [
+          // 🎨 Totoro forest & cloud decorations
+          ...List.generate(4, (i) {
+            final left = random.nextDouble() * MediaQuery.of(context).size.width;
+            final top = random.nextDouble() * MediaQuery.of(context).size.height;
+            final asset = i % 2 == 0
+                ? 'assets/ghibli_cloud.png'
+                : 'assets/totoro_forest.png';
+            final size = 100.0 + random.nextDouble() * 80;
+            return Positioned(
+              left: left,
+              top: top,
+              child: Opacity(
+                opacity: 0.15,
+                child: Image.asset(asset, width: size),
+              ),
+            );
+          }),
+
           // 🎣 Animated fish for completed tasks
           ...List.generate(completedTodos.length, (i) {
             final double spacing = MediaQuery.of(context).size.height /
