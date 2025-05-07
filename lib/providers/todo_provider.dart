@@ -45,30 +45,6 @@ class TodoListNotifier extends StateNotifier<List<Todo>> {
     }
   }
 
-
-  Future<void> addRecurrentTodo(String content, TodoCategory category) async {
-    Todo newTodo = Todo(
-      todoId: (currId++).toString(),
-      content: content,
-      isCompleted: false,
-      recurrent: true,
-      category: category,
-    );
-    state = [...state, newTodo];
-    Hive.box<Todo>('todos').add(newTodo);
-
-    // ☁️ Upload to Firebase
-    try {
-      if (kIsWeb || Platform.isAndroid) {
-        final firebaseSync = await FirebaseSync.create();
-        print("📤 Attempting to upload todo: ${newTodo.content}");
-        await firebaseSync.uploadTodo(newTodo);
-      }
-    } catch (e) {
-      print("Firebase update failed: $e");
-    }
-  }
-
   TodoCategory getCategory(int id) {
     return state.firstWhere((todo) => todo.todoId == id.toString()).category;
   }
@@ -83,7 +59,6 @@ class TodoListNotifier extends StateNotifier<List<Todo>> {
             todoId: todo.todoId,
             content: todo.content,
             isCompleted: true,
-            recurrent: todo.recurrent,
             category: todo.category,
           )
         else

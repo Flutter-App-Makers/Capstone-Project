@@ -20,7 +20,6 @@ class TodoAdapter extends TypeAdapter<Todo> {
       todoId: fields[0] as String,
       content: fields[1] as String,
       isCompleted: fields[2] as bool,
-      recurrent: fields[3] as bool,
       category: fields[4] as TodoCategory,
     );
   }
@@ -35,8 +34,6 @@ class TodoAdapter extends TypeAdapter<Todo> {
       ..write(obj.content)
       ..writeByte(2)
       ..write(obj.isCompleted)
-      ..writeByte(3)
-      ..write(obj.recurrent)
       ..writeByte(4)
       ..write(obj.category);
   }

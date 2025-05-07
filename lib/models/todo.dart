@@ -13,9 +13,6 @@ class Todo extends HiveObject {
   @HiveField(2)
   bool isCompleted;
 
-  @HiveField(3)
-  final bool recurrent;
-
   @HiveField(4)
   final TodoCategory category;
 
@@ -23,7 +20,6 @@ class Todo extends HiveObject {
     required this.todoId,
     required this.content,
     this.isCompleted = false,
-    this.recurrent = false,
     required this.category,
   });
 
@@ -31,7 +27,6 @@ class Todo extends HiveObject {
         'todoId': todoId,
         'content': content,
         'isCompleted': isCompleted,
-        'recurrent': recurrent,
         'category': category.name,
       };
 
@@ -40,7 +35,6 @@ class Todo extends HiveObject {
       todoId: json['todoId'],
       content: json['content'],
       isCompleted: json['isCompleted'],
-      recurrent: json['recurrent'],
       category: TodoCategory.values.firstWhere(
         (e) => e.name == json['category'],
         orElse: () => TodoCategory.other,

@@ -4,11 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
-class RecurrentTodoSlidable extends ConsumerWidget {
+class CompletedTodoSlidable extends ConsumerWidget {
   final int id;
   final String name;
 
-  const RecurrentTodoSlidable(
+  const CompletedTodoSlidable(
       {super.key, required this.id, required this.name});
 
   @override

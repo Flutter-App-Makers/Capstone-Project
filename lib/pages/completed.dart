@@ -11,7 +11,7 @@ class CompletedPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     List<Todo> todos = ref.watch(todoProvider);
     List<Todo> completedTodos =
-        todos.where((todo) => todo.isCompleted && !todo.recurrent).toList();
+        todos.where((todo) => todo.isCompleted).toList();
 
     return Scaffold(
       appBar: AppBar(
@@ -21,20 +21,11 @@ class CompletedPage extends ConsumerWidget {
       body: ListView.builder(
           itemCount: completedTodos.length,
           itemBuilder: (context, index) {
-            return RecurrentTodoSlidable(
+            return CompletedTodoSlidable(
               id: int.parse(completedTodos[index].todoId),
               name: completedTodos[index].content,
             );
           }),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.of(context).push(
-            MaterialPageRoute(builder: (context) => CompletedPage()),
-          );
-        },
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ),
     );
   }
 }

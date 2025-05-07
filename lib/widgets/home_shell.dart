@@ -228,15 +228,6 @@ class HomeShellState extends ConsumerState<HomeShell> {
             icon: const Icon(Icons.add),
             label: const Text("Add Todo"),
           ),
-          const SizedBox(height: 10),
-          FloatingActionButton.extended(
-            heroTag: "add_recurrent",
-            onPressed: () {
-              Navigator.pushNamed(context, '/addRecurrent');
-            },
-            icon: const Icon(Icons.loop),
-            label: const Text("Add Recurrent"),
-          ),
         ],
       ),
     );

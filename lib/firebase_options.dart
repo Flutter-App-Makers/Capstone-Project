@@ -41,47 +41,48 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyAHpoPw9Ai_aFotzAiKyHEpEhEijUc1rW0',
-    appId: '1:881565548808:web:5c27dc59bcfa311a45ecbd',
-    messagingSenderId: '881565548808',
-    projectId: 'perfectly-plump-plums',
-    authDomain: 'perfectly-plump-plums.firebaseapp.com',
-    storageBucket: 'perfectly-plump-plums.firebasestorage.app',
+    apiKey: 'AIzaSyDwoBFgTdsPciKvuq_a42dh0x41LXZBzNs',
+    appId: '1:886805275939:web:88cc8f7f32b7e827b49896',
+    messagingSenderId: '886805275939',
+    projectId: 'perfectly-plump-plums-1c47d',
+    authDomain: 'perfectly-plump-plums-1c47d.firebaseapp.com',
+    storageBucket: 'perfectly-plump-plums-1c47d.firebasestorage.app',
+    measurementId: 'G-79TCFR78RQ',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyA9vOcpTQC_tY1KpJxVkqN7Qa8jgKq7Hzg',
-    appId: '1:881565548808:android:4321cc030aeaf32d45ecbd',
-    messagingSenderId: '881565548808',
-    projectId: 'perfectly-plump-plums',
-    storageBucket: 'perfectly-plump-plums.firebasestorage.app',
+    apiKey: 'AIzaSyBBIoiRmXFm8OzMv_eba9o5-UoEB9vvxEI',
+    appId: '1:886805275939:android:20c0a136692f996cb49896',
+    messagingSenderId: '886805275939',
+    projectId: 'perfectly-plump-plums-1c47d',
+    storageBucket: 'perfectly-plump-plums-1c47d.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyDKFWMmquOXIWdCsck8c-TYwUdi6ou_lFU',
-    appId: '1:881565548808:ios:0b504a0d29e109c945ecbd',
-    messagingSenderId: '881565548808',
-    projectId: 'perfectly-plump-plums',
-    storageBucket: 'perfectly-plump-plums.firebasestorage.app',
+    apiKey: 'AIzaSyCqi9TgatXGkeADw1eEQv7W0_Y8t0ZuY6g',
+    appId: '1:886805275939:ios:6bc49dc8c794cf24b49896',
+    messagingSenderId: '886805275939',
+    projectId: 'perfectly-plump-plums-1c47d',
+    storageBucket: 'perfectly-plump-plums-1c47d.firebasestorage.app',
     iosBundleId: 'com.example.capstoneProject',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyDKFWMmquOXIWdCsck8c-TYwUdi6ou_lFU',
-    appId: '1:881565548808:ios:0b504a0d29e109c945ecbd',
-    messagingSenderId: '881565548808',
-    projectId: 'perfectly-plump-plums',
-    storageBucket: 'perfectly-plump-plums.firebasestorage.app',
+    apiKey: 'AIzaSyCqi9TgatXGkeADw1eEQv7W0_Y8t0ZuY6g',
+    appId: '1:886805275939:ios:6bc49dc8c794cf24b49896',
+    messagingSenderId: '886805275939',
+    projectId: 'perfectly-plump-plums-1c47d',
+    storageBucket: 'perfectly-plump-plums-1c47d.firebasestorage.app',
     iosBundleId: 'com.example.capstoneProject',
   );
 
   static const FirebaseOptions windows = FirebaseOptions(
-    apiKey: 'AIzaSyAHpoPw9Ai_aFotzAiKyHEpEhEijUc1rW0',
-    appId: '1:881565548808:web:755dc7e8b71fe3af45ecbd',
-    messagingSenderId: '881565548808',
-    projectId: 'perfectly-plump-plums',
-    authDomain: 'perfectly-plump-plums.firebaseapp.com',
-    storageBucket: 'perfectly-plump-plums.firebasestorage.app',
+    apiKey: 'AIzaSyDwoBFgTdsPciKvuq_a42dh0x41LXZBzNs',
+    appId: '1:886805275939:web:2636d0983b9355c5b49896',
+    messagingSenderId: '886805275939',
+    projectId: 'perfectly-plump-plums-1c47d',
+    authDomain: 'perfectly-plump-plums-1c47d.firebaseapp.com',
+    storageBucket: 'perfectly-plump-plums-1c47d.firebasestorage.app',
+    measurementId: 'G-FVVV1Q93XJ',
   );
-
 }

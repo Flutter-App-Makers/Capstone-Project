@@ -14,23 +14,20 @@ class MyHomePage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final todos = ref.watch(todoProvider);
     final activeTodos =
-        todos.where((t) => !t.isCompleted && !t.recurrent).toList();
+        todos.where((t) => !t.isCompleted).toList();
     final completedTodos =
-        todos.where((todo) => todo.isCompleted && !todo.recurrent).toList();
-    final recurrentTodos = todos.where((todo) => todo.recurrent).toList();
+        todos.where((todo) => todo.isCompleted).toList();
 
     return HomeShell(
       body: activeTodos.isEmpty &&
-              completedTodos.isEmpty &&
-              recurrentTodos.isEmpty
+              completedTodos.isEmpty
           ? const EmptyTodoPlaceholder()
           : Column(
               children: [
                 Expanded(child: ActiveTodoList(todos: activeTodos)),
-                if (completedTodos.isNotEmpty || recurrentTodos.isNotEmpty)
+                if (completedTodos.isNotEmpty)
                   NavigationRow(
                     hasCompleted: completedTodos.isNotEmpty,
-                    hasRecurrent: recurrentTodos.isNotEmpty,
                   ),
               ],
             ),

@@ -11,7 +11,6 @@ class StatsPage extends ConsumerWidget {
     final todos = ref.watch(todoProvider);
     final total = todos.length;
     final completed = todos.where((t) => t.isCompleted).length;
-    final recurrent = todos.where((t) => t.recurrent).length;
     final completionRate = total == 0 ? 0 : ((completed / total) * 100).round();
 
     return Scaffold(
@@ -24,8 +23,6 @@ class StatsPage extends ConsumerWidget {
             Text("📋 Total Tasks: $total",
                 style: Theme.of(context).textTheme.titleMedium),
             Text("✅ Completed: $completed",
-                style: Theme.of(context).textTheme.titleMedium),
-            Text("🔁 Recurrent: $recurrent",
                 style: Theme.of(context).textTheme.titleMedium),
             const SizedBox(height: 20),
             LinearProgressIndicator(
