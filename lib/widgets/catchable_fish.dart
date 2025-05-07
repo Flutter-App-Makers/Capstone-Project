@@ -1,4 +1,3 @@
-
 import 'dart:math';
 import 'package:flutter/material.dart';
 
@@ -25,7 +24,6 @@ class CatchableFishState extends State<CatchableFish>
   late AnimationController _swimController;
   late AnimationController _catchController;
   late Animation<double> _angleAnim;
-  late Animation<double> _liftAnim;
 
   bool caught = false;
   bool facingRight = true;
@@ -41,13 +39,10 @@ class CatchableFishState extends State<CatchableFish>
 
     _angleAnim = Tween<double>(begin: 0, end: 2 * pi).animate(_swimController);
 
-    _liftAnim = Tween<double>(begin: 0, end: -500).animate(CurvedAnimation(
-      parent: _catchController = AnimationController(
-        vsync: this,
-        duration: const Duration(seconds: 2),
-      ),
-      curve: Curves.easeInOut,
-    ));
+    _catchController = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 2),
+    );
 
     _angleAnim.addListener(() {
       final dir = cos(_angleAnim.value);
@@ -58,8 +53,11 @@ class CatchableFishState extends State<CatchableFish>
   }
 
   void catchFish() {
+    if (!mounted || caught) return;
+
     setState(() => caught = true);
     _swimController.stop();
+
     _catchController.forward().then((_) {
       widget.onCaught?.call();
     });
@@ -78,23 +76,58 @@ class CatchableFishState extends State<CatchableFish>
         ? AnimatedBuilder(
             animation: _catchController,
             builder: (context, _) {
-              return Positioned(
-                left: widget.center.dx,
-                top: widget.center.dy + _liftAnim.value,
-                child: Column(
-                  children: [
-                    Container(
+              final progress = _catchController.value;
+              final fishStartY = widget.center.dy;
+
+              double lineHeight;
+              double hookY;
+              double fishY;
+
+              if (progress < 0.5) {
+                // Phase 1: line grows down
+                lineHeight = fishStartY * (progress / 0.5);
+                hookY = lineHeight;
+                fishY = fishStartY; // stays still
+              } else {
+                // Phase 2: line retracts and pulls fish
+                final t = (progress - 0.5) / 0.5;
+                final liftAmount = fishStartY * t;
+                lineHeight = fishStartY - liftAmount;
+                hookY = lineHeight;
+                fishY = hookY + 16; // fish below hook
+              }
+
+              return Stack(
+                children: [
+                  // 🎣 Fishing line
+                  Positioned(
+                    left: widget.center.dx + 30,
+                    top: 0,
+                    child: Container(
                       width: 2,
-                      height: -_liftAnim.value.clamp(0, 500).toDouble(),
-                      color: Colors.white,
+                      height: lineHeight,
+                      color: Colors.blueGrey,
                     ),
-                    Transform(
+                  ),
+
+                  // 🪝 Hook at bottom of line
+                  Positioned(
+                    left: widget.center.dx + 22,
+                    top: hookY,
+                    child: Image.asset('assets/hook.png', width: 16),
+                  ),
+
+                  // 🐟 Fish follows hook only during retract
+                  Positioned(
+                    left: widget.center.dx,
+                    top: fishY,
+                    child: Transform(
                       alignment: Alignment.center,
                       transform: Matrix4.rotationY(facingRight ? 0 : pi),
                       child: Image.asset('assets/fish.png', width: 60),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               );
             },
           )

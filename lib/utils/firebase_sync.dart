@@ -57,4 +57,5 @@ class FirebaseSync {
     print("📥 Got ${snapshot.docs.length} todos from Firestore");
     return snapshot.docs.map((doc) => Todo.fromJson(doc.data())).toList();
   }
+  
 }
