@@ -7,11 +7,11 @@ class FishWidget extends StatefulWidget {
   final Duration duration;
 
   const FishWidget({
-    Key? key,
+    super.key,
     required this.center,
     this.radius = 30.0,
     this.duration = const Duration(seconds: 4),
-  }) : super(key: key);
+  });
 
   @override
   State<FishWidget> createState() => _FishWidgetState();

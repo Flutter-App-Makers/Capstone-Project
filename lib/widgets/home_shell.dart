@@ -5,7 +5,6 @@ import 'dart:math';
 
 import 'package:capstone_project/root_gate.dart';
 import 'package:capstone_project/widgets/catchable_fish.dart';
-import 'package:capstone_project/widgets/fish_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/todo_provider.dart';
