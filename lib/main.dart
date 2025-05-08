@@ -28,7 +28,7 @@ void main() async {
       await FirebaseAuth.instance.signInAnonymously();
       print('✅ Signed in anonymously');
     } catch (e) {
-      print('Firebase init failed: $e');
+      print('Firebase init failed :-(: $e');
     }
   }
 
