@@ -1,4 +1,5 @@
 // lib/widgets/nav_row.dart
+import 'package:capstone_project/pages/recurrent_task.dart';
 import 'package:flutter/material.dart';
 import '../pages/completed.dart';
 
@@ -13,6 +14,17 @@ class NavigationRow extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
+        TextButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const RecurrentTasksPage(),
+              ),
+            );
+          },
+          child: const Text('Recurrent Tasks'),
+        ),
         if (hasCompleted)
           ElevatedButton.icon(
             onPressed: () => Navigator.push(

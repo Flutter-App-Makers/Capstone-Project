@@ -1,6 +1,7 @@
 // ignore_for_file: use_build_context_synchronously, avoid_print
 
 import 'dart:math';
+import 'package:capstone_project/providers/recurrent_task_provider.dart';
 import 'package:capstone_project/root_gate.dart';
 import 'package:capstone_project/widgets/catchable_fish.dart';
 import 'package:flutter/material.dart';
@@ -27,9 +28,17 @@ class HomeShellState extends ConsumerState<HomeShell> {
     Future.microtask(() async {
       final isSyncing = ref.read(isSyncingProvider.notifier);
       isSyncing.state = true;
-      await ref.read(todoProvider.notifier).syncFromFirebase();
-      isSyncing.state = false;
+
+      try {
+        await ref.read(todoProvider.notifier).syncFromFirebase();
+        await ref.read(recurrentTaskProvider.notifier).syncFromFirebase();
+      } catch (e) {
+        print('🔥 Sync error: $e');
+      } finally {
+        isSyncing.state = false;
+      }
     });
+
   }
 
   List<Widget> _buildDecorations() {

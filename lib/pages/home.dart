@@ -19,18 +19,15 @@ class MyHomePage extends ConsumerWidget {
         todos.where((todo) => todo.isCompleted).toList();
 
     return HomeShell(
-      body: activeTodos.isEmpty &&
-              completedTodos.isEmpty
-          ? const EmptyTodoPlaceholder()
-          : Column(
-              children: [
-                Expanded(child: ActiveTodoList(todos: activeTodos)),
-                if (completedTodos.isNotEmpty)
-                  NavigationRow(
-                    hasCompleted: completedTodos.isNotEmpty,
-                  ),
-              ],
-            ),
+      body: Column(
+        children: [
+          if (activeTodos.isEmpty && completedTodos.isEmpty)
+            const Expanded(child: EmptyTodoPlaceholder())
+          else
+            Expanded(child: ActiveTodoList(todos: activeTodos)),
+          NavigationRow(hasCompleted: completedTodos.isNotEmpty),
+        ],
+      ),
     );
   }
 }
