@@ -119,10 +119,11 @@ class TodoListNotifier extends StateNotifier<List<Todo>> {
 
   Future<void> setTodos(List<Todo> newTodos) async {
     state = newTodos;
+
     if (newTodos.isNotEmpty) {
       final ids =
           newTodos.map((todo) => int.tryParse(todo.todoId) ?? -1).toList();
-      final maxId = ids.isEmpty ? 0 : (ids.reduce((a, b) => a > b ? a : b));
+      final maxId = ids.isEmpty ? 0 : ids.reduce((a, b) => a > b ? a : b);
       currId = maxId + 1;
     } else {
       currId = 0;
@@ -130,7 +131,19 @@ class TodoListNotifier extends StateNotifier<List<Todo>> {
 
     final box = Hive.box<Todo>('todos');
     await box.clear();
-    await box.putAll({for (final todo in newTodos) todo.todoId: todo});
+
+    print("🧠 Saving ${newTodos.length} todos to Hive");
+
+    for (final todo in newTodos) {
+      try {
+        await box.put(todo.todoId, todo);
+      } catch (e) {
+        print("❌ Hive put failed for ${todo.todoId}: $e");
+      }
+    }
+
+    await box.flush(); // 🧽 Ensures all writes complete
+    print("✅ All todos written to Hive");
   }
 
   Future<void> publishToFirebase() async {

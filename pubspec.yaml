@@ -45,6 +45,7 @@ dependencies:
   uuid: ^4.0.0
   fl_chart: ^0.64.0
   intl: ^0.18.1
+  web: ^0.5.1
 
 dev_dependencies:
   build_runner: ^2.4.6
