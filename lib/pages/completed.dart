@@ -16,7 +16,7 @@ class CompletedPage extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: const Text("Todo App"),
+        title: const Text("Tacklebox"),
       ),
       body: ListView.builder(
           itemCount: completedTodos.length,
