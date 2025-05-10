@@ -6,7 +6,7 @@
 
 ## 🌐 Live Demo
 
-https://perfectly-plump-plums-1c47d.web.app/?flush
+https://perfectly-plump-plums-1c47d.web.app
 
 ---
 

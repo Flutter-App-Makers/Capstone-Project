@@ -6,6 +6,30 @@
             "**/.*",
             "**/node_modules/**"
         ],
+        "headers": [
+            {
+                "source": "**/*.js",
+                "headers": [
+                    {
+                        "key": "Cache-Control",
+                        "value": "no-cache"
+                    },
+                    {
+                        "key": "Content-Type",
+                        "value": "application/javascript"
+                    }
+                ]
+            },
+            {
+                "source": "**/*.wasm",
+                "headers": [
+                    {
+                        "key": "Content-Type",
+                        "value": "application/wasm"
+                    }
+                ]
+            }
+        ],
         "rewrites": [
             {
                 "source": "**",
