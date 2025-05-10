@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'dart:collection';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/recurrent_task.dart';
@@ -64,8 +66,12 @@ class RecurrentTaskNotifier extends StateNotifier<List<RecurrentTask>> {
   }
 
   Future<void> syncFromFirebase() async {
-    final downloaded = await downloadRecurrentTasks();
-    state = downloaded;
+    try {
+      final downloaded = await downloadRecurrentTasks();
+      state = downloaded; // ✅ Clear deleted cache
+    } catch (e, stack) {
+      print("🔥 Recurrent task sync failed: $e\n$stack");
+    }
   }
 
   DateTime? getStartTime(String taskId) => _activeTasks[taskId];

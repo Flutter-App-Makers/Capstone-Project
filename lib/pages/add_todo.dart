@@ -20,42 +20,55 @@ class _AddTodoState extends ConsumerState<AddTodo> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text("Add Todo")),
-      body: Center(
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextField(
-                controller: todoController,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                ),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: EdgeInsets.only(
+            left: 16,
+            right: 16,
+            bottom: MediaQuery.of(context).viewInsets.bottom + 16,
+            top: 24,
+          ),
+          child: Center(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 500),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  TextField(
+                    controller: todoController,
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'What needs to be done?',
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  TodoCategoryDropdown(
+                    selected: _selectedCategory,
+                    onChanged: (newCat) {
+                      setState(() {
+                        _selectedCategory = newCat;
+                      });
+                    },
+                  ),
+                  const SizedBox(height: 24),
+                  ElevatedButton(
+                    onPressed: () {
+                      final text = todoController.text.trim();
+                      if (text.isEmpty) return;
+
+                      ref.read(todoProvider.notifier).addTodo(
+                            text,
+                            _selectedCategory,
+                          );
+
+                      Navigator.pop(context);
+                    },
+                    child: const Text('Add Todo'),
+                  ),
+                ],
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TodoCategoryDropdown(
-                selected: _selectedCategory,
-                onChanged: (newCat) {
-                  setState(() {
-                    _selectedCategory = newCat;
-                  });
-                },
-              ),
-            ),
-            TextButton(
-              onPressed: () {
-                if (todoController.text.isNotEmpty) {
-                  ref.read(todoProvider.notifier).addTodo(
-                        todoController.text,
-                        _selectedCategory,
-                      );
-                  Navigator.pop(context);
-                }
-              },
-              child: const Text("Add Todo"),
-            ),
-          ],
+          ),
         ),
       ),
     );

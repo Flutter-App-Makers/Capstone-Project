@@ -35,7 +35,14 @@ class FirebaseSync {
 
   /// Delete a single todo from Firestore
   Future<void> deleteTodo(String todoId) async {
-    await _todosRef.doc(todoId).delete();
+    final doc = _todosRef.doc(todoId);
+    final snapshot = await doc.get();
+    if (snapshot.exists) {
+      print("✅ Found $todoId, deleting.");
+      await doc.delete();
+    } else {
+      print("❌ Could not find $todoId to delete.");
+    }
   }
 
   /// Publish all todos from local state

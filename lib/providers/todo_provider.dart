@@ -76,20 +76,25 @@ class TodoListNotifier extends StateNotifier<List<Todo>> {
   }
 
   Future<void> deleteTodo(int id) async {
-    state = state.where((todo) => todo.todoId != id.toString()).toList();
+    final idStr = id.toString();
+    _deletedIds.add(idStr); // Track it
+    state = state.where((todo) => todo.todoId != idStr).toList();
   }
 
   Future<void> syncFromFirebase() async {
     try {
       final firebaseSync = await FirebaseSync.create();
       final todos = await firebaseSync.syncFromCloud();
-      state = todos;
 
+      state = todos; // ✅ Overwrite local state
+      _deletedIds.clear(); // ✅ Clear deleted cache
+
+      // 🔄 Recompute next ID
       final ids = todos.map((todo) => int.tryParse(todo.todoId) ?? -1).toList();
       final maxId = ids.isEmpty ? 0 : (ids.reduce((a, b) => a > b ? a : b));
       currId = maxId + 1;
     } catch (e, stack) {
-      print("🔥 Firebase upload failed: $e\n$stack");
+      print("🔥 Firebase sync failed: $e\n$stack");
     }
   }
 
@@ -107,12 +112,22 @@ class TodoListNotifier extends StateNotifier<List<Todo>> {
   }
 
   Future<void> publishToFirebase() async {
-    final firebase = await FirebaseSync.create();
-    await firebase.publishAll(state);
+    try {
+      final firebaseSync = await FirebaseSync.create();
 
-    for (final id in _deletedIds) {
-      await firebase.deleteTodo(id);
+      // Upload all current todos
+      for (final todo in state) {
+        await firebaseSync.uploadTodo(todo);
+      }
+
+      // Delete any that were removed locally
+      for (final id in _deletedIds) {
+        await firebaseSync.deleteTodo(id);
+      }
+
+      _deletedIds.clear(); // Clear after publishing
+    } catch (e, stack) {
+      print("🔥 Publish failed: $e\n$stack");
     }
-    _deletedIds.clear(); // ✅ Done
   }
 }

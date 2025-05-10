@@ -20,63 +20,81 @@ class RecurrentTasksPage extends ConsumerWidget {
           final task = tasks[index];
           final isActive = notifier.isTaskActive(task.id);
 
-          return Dismissible(
-            key: ValueKey(task.id),
-            background: Container(
-              color: Colors.red,
-              alignment: Alignment.centerRight,
-              padding: const EdgeInsets.only(right: 20),
-              child: const Icon(Icons.delete, color: Colors.white),
-            ),
-            direction: DismissDirection.endToStart,
-            confirmDismiss: (_) async {
-              return await showDialog<bool>(
-                context: context,
-                builder: (context) => AlertDialog(
-                  title: const Text("Delete Task"),
-                  content:
-                      Text('Are you sure you want to delete "${task.title}"?'),
-                  actions: [
-                    TextButton(
-                      onPressed: () => Navigator.pop(context, false),
-                      child: const Text("Cancel"),
-                    ),
-                    ElevatedButton(
-                      onPressed: () => Navigator.pop(context, true),
-                      child: const Text("Delete"),
-                    ),
-                  ],
-                ),
-              );
-            },
-            onDismissed: (_) => notifier.deleteTask(task.id),
-            child: ListTile(
-              title: Text(task.title),
-              subtitle: isActive
-                  ? Text(
-                      'Running... Started at ${DateFormat.Hm().format(notifier.getStartTime(task.id)!)}',
-                      style: const TextStyle(color: Colors.green),
-                    )
-                  : null,
-              trailing: ElevatedButton.icon(
-                icon: Icon(isActive ? Icons.stop : Icons.play_arrow),
-                label: Text(isActive ? 'Stop' : 'Start'),
-                onPressed: () {
-                  if (isActive) {
-                    notifier.stopTask(task.id);
-                  } else {
-                    notifier.startTask(task.id);
-                  }
-                },
+          return Padding(
+            padding:
+                const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
+            child: Dismissible(
+              key: ValueKey(task.id),
+              direction: DismissDirection.endToStart,
+              background: Container(
+                color: Colors.red,
+                alignment: Alignment.centerRight,
+                padding: const EdgeInsets.only(right: 20),
+                child: const Icon(Icons.delete, color: Colors.white),
               ),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => RecurrentTaskStatsPage(task: task),
+              confirmDismiss: (_) async {
+                return await showDialog<bool>(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    title: const Text("Delete Task"),
+                    content: Text(
+                        'Are you sure you want to delete "${task.title}"?'),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.pop(context, false),
+                        child: const Text("Cancel"),
+                      ),
+                      ElevatedButton(
+                        onPressed: () => Navigator.pop(context, true),
+                        child: const Text("Delete"),
+                      ),
+                    ],
                   ),
                 );
               },
+              onDismissed: (_) => notifier.deleteTask(task.id),
+              child: Card(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12)),
+                elevation: 3,
+                child: ListTile(
+                  title: Text(
+                    task.title,
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
+                  subtitle: isActive
+                      ? Text(
+                          'Started at ${DateFormat.Hm().format(notifier.getStartTime(task.id)!)}',
+                          style: const TextStyle(color: Colors.green),
+                        )
+                      : null,
+                  trailing: ElevatedButton.icon(
+                    icon: Icon(isActive ? Icons.stop : Icons.play_arrow),
+                    label: Text(isActive ? 'Stop' : 'Start'),
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 12, vertical: 8),
+                      minimumSize: const Size(96, 36),
+                    ),
+                    onPressed: () {
+                      if (isActive) {
+                        notifier.stopTask(task.id);
+                      } else {
+                        notifier.startTask(task.id);
+                      }
+                    },
+                  ),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            RecurrentTaskStatsPage(task: task),
+                      ),
+                    );
+                  },
+                ),
+              ),
             ),
           );
         },

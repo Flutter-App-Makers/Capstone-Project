@@ -32,12 +32,11 @@ class HomeShellState extends ConsumerState<HomeShell> {
         await ref.read(todoProvider.notifier).syncFromFirebase();
         await ref.read(recurrentTaskProvider.notifier).syncFromFirebase();
       } catch (e) {
-        print('🔥 Sync error: $e');
+        print('🔥 Sync error: \$e');
       } finally {
         isSyncing.state = false;
       }
     });
-
   }
 
   List<Widget> _buildDecorations() {
@@ -70,6 +69,10 @@ class HomeShellState extends ConsumerState<HomeShell> {
   @override
   Widget build(BuildContext context) {
     final todos = ref.watch(todoProvider).where((t) => !t.isCompleted).toList();
+
+    // Remove fishKeys for any completed or deleted todos
+    final activeTodoIds = todos.map((t) => t.todoId).toSet();
+    fishKeys.removeWhere((id, _) => !activeTodoIds.contains(id));
 
     return Scaffold(
       appBar: AppBar(
@@ -164,8 +167,9 @@ class HomeShellState extends ConsumerState<HomeShell> {
                   ..._buildDecorations(), // 🎨 Ghibli cloud + Totoro forest decorations
 
                   // 🐟 Fish layer
-                  ...List.generate(todos.length, (i) {
-                    final todo = todos[i];
+                  ...todos.asMap().entries.map((entry) {
+                    final i = entry.key;
+                    final todo = entry.value;
                     final key = fishKeys.putIfAbsent(
                       todo.todoId,
                       () => GlobalKey<CatchableFishState>(),
@@ -176,11 +180,13 @@ class HomeShellState extends ConsumerState<HomeShell> {
                     return CatchableFish(
                       key: key,
                       center: Offset(
-                        100 + Random().nextDouble() * 200,
+                        100 + Random(todo.todoId.hashCode).nextDouble() * 200,
                         spacing * (i + 1),
                       ),
-                      radius: 30 + Random().nextDouble() * 20,
-                      swimDuration: Duration(seconds: 3 + Random().nextInt(3)),
+                      radius:
+                          30 + Random(todo.todoId.hashCode).nextDouble() * 20,
+                      swimDuration: Duration(
+                          seconds: 3 + Random(todo.todoId.hashCode).nextInt(3)),
                       onCaught: () {
                         // optional sparkle or sound
                       },
@@ -230,7 +236,7 @@ class HomeShellState extends ConsumerState<HomeShell> {
             if (mounted) {
               Navigator.pop(dialogContext);
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('Cloud sync failed: $e')),
+                const SnackBar(content: Text('Cloud sync failed: \$e')),
               );
             }
           } finally {
@@ -263,7 +269,7 @@ class HomeShellState extends ConsumerState<HomeShell> {
             if (mounted) {
               Navigator.pop(dialogContext);
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('Publish failed: $e')),
+                const SnackBar(content: Text('Publish failed: \$e')),
               );
             }
           } finally {
@@ -290,7 +296,7 @@ class HomeShellState extends ConsumerState<HomeShell> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text('Sign out failed: $e')));
+            .showSnackBar(const SnackBar(content: Text('Sign out failed: \$e')));
       }
     }
   }

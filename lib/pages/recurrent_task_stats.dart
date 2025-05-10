@@ -25,52 +25,81 @@ class RecurrentTaskStatsPage extends StatelessWidget {
         .reduce((a, b) => a > b ? a : b);
     final useSeconds = maxSeconds < 60;
 
+    final screenSize = MediaQuery.of(context).size;
+    final isSmallScreen = screenSize.width < 400;
+    final labelStyle = TextStyle(fontSize: isSmallScreen ? 10 : 12);
+
     return Scaffold(
       appBar: AppBar(title: Text('${task.title} Stats')),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: BarChart(
-          BarChartData(
-            alignment: BarChartAlignment.spaceBetween,
-            titlesData: FlTitlesData(
-              bottomTitles: AxisTitles(
-                sideTitles: SideTitles(
-                  showTitles: true,
-                  getTitlesWidget: (double value, _) {
-                    final index = value.toInt();
-                    if (index < 0 || index >= records.length) {
-                      return const SizedBox.shrink();
-                    }
-                    return Text(
-                      formatter.format(records[index].startTime),
-                      style: const TextStyle(fontSize: 10),
-                      textAlign: TextAlign.center,
-                    );
-                  },
-                ),
-              ),
-              leftTitles: AxisTitles(
-                sideTitles: SideTitles(
-                  showTitles: true,
-                  reservedSize: 40,
-                  getTitlesWidget: (value, _) => Text(
-                    useSeconds ? '${value.toInt()}s' : '${value.toInt()}m',
-                    style: const TextStyle(fontSize: 10),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(16),
+          child: Center(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 600),
+              child: AspectRatio(
+                aspectRatio: isSmallScreen ? 1 : 1.5,
+                child: BarChart(
+                  BarChartData(
+                    alignment: BarChartAlignment.spaceBetween,
+                    barGroups: List.generate(records.length, (i) {
+                      final r = records[i];
+                      return BarChartGroupData(x: i, barRods: [
+                        BarChartRodData(
+                          toY: r.duration.inSeconds.toDouble(),
+                          width: isSmallScreen ? 12 : 18,
+                          color: Colors.blueAccent,
+                          borderRadius: BorderRadius.circular(4),
+                        )
+                      ]);
+                    }),
+                    titlesData: FlTitlesData(
+                      bottomTitles: AxisTitles(
+                        sideTitles: SideTitles(
+                          showTitles: true,
+                          reservedSize: 40,
+                          getTitlesWidget: (double value, _) {
+                            final index = value.toInt();
+                            if (index < 0 || index >= records.length) {
+                              return const SizedBox.shrink();
+                            }
+                            return Padding(
+                              padding: const EdgeInsets.only(top: 4),
+                              child: Text(
+                                formatter.format(records[index].startTime),
+                                style: labelStyle,
+                                textAlign: TextAlign.center,
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                      leftTitles: AxisTitles(
+                        sideTitles: SideTitles(
+                          showTitles: true,
+                          getTitlesWidget: (value, _) {
+                            final intVal = value.toInt();
+                            return Text(
+                              useSeconds
+                                  ? '$intVal s'
+                                  : '${(intVal / 60).toStringAsFixed(0)} m',
+                              style: labelStyle,
+                            );
+                          },
+                          reservedSize: 40,
+                        ),
+                      ),
+                      topTitles:
+                          const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                      rightTitles:
+                          const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                    ),
+                    gridData: const FlGridData(show: true),
+                    borderData: FlBorderData(show: false),
                   ),
                 ),
               ),
             ),
-            barGroups: [
-              for (int i = 0; i < records.length; i++)
-                BarChartGroupData(x: i, barRods: [
-                  BarChartRodData(
-                    toY: useSeconds
-                        ? records[i].duration.inSeconds.toDouble()
-                        : records[i].duration.inMinutes.toDouble(),
-                    width: 16,
-                  ),
-                ])
-            ],
           ),
         ),
       ),
