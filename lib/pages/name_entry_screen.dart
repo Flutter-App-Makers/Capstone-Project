@@ -75,13 +75,13 @@ class _NameEntryScreenState extends State<NameEntryScreen> {
                       TextField(
                         controller: _controller,
                         decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          hintText: "e.g. Totoro",
+                          border: const OutlineInputBorder(),
+                          hintText: "e.g. Yuno",
                           errorText: _error,
+                          fillColor: theme.colorScheme
+                              // ignore: deprecated_member_use
+                              .surfaceVariant, // ✅ Compatible with Flutter 3.19.6
                           filled: true,
-                          fillColor: theme.colorScheme.surfaceContainerHighest,
                         ),
                       ),
                       const SizedBox(height: 24),
