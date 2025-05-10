@@ -2,7 +2,6 @@
 
 import 'dart:io';
 
-import 'package:capstone_project/models/todo.dart';
 import 'package:capstone_project/pages/add_todo.dart';
 import 'package:capstone_project/pages/stats.dart';
 import 'package:capstone_project/root_gate.dart';
@@ -14,7 +13,6 @@ import 'firebase_options.dart';
 import 'package:flutter/material.dart';
 import 'package:capstone_project/pages/home.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 
 void main() async {
   print('🔥 Starting app...');
@@ -32,11 +30,6 @@ void main() async {
     }
   }
 
-  await Hive.initFlutter();
-  Hive.registerAdapter(TodoAdapter());
-  Hive.registerAdapter(TodoCategoryAdapter());
-  await Hive.openBox<Todo>('todos');
-
   runApp(const ProviderScope(child: RootGate()));
   print('🟢 Running app...');
 }
@@ -48,7 +41,7 @@ class MyApp extends StatelessWidget {
     return ProviderScope(
       child: MaterialApp(
         theme: ghibliTheme,
-        home: MyHomePage(),
+        home: const MyHomePage(),
         routes: {
           '/addTodo': (context) => const AddTodo(),
           '/stats': (context) => const StatsPage(),

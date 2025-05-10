@@ -1,17 +1,14 @@
 // ignore_for_file: use_build_context_synchronously, avoid_print
 
 import 'dart:math';
-import 'package:capstone_project/models/todo.dart';
 import 'package:capstone_project/providers/recurrent_task_provider.dart';
 import 'package:capstone_project/root_gate.dart';
 import 'package:capstone_project/widgets/catchable_fish.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../providers/todo_provider.dart';
-import '../utils/json_storage.dart';
 
 class HomeShell extends ConsumerStatefulWidget {
   final Widget body;
@@ -119,16 +116,6 @@ class HomeShellState extends ConsumerState<HomeShell> {
                   );
                 },
               ),
-            ),
-            ListTile(
-              leading: const Icon(Icons.upload_file),
-              title: const Text('Export Todos'),
-              onTap: () => _exportTodos(context),
-            ),
-            ListTile(
-              leading: const Icon(Icons.download),
-              title: const Text('Import Todos'),
-              onTap: () => _confirmAndImportTodos(context),
             ),
             ListTile(
               leading: const Icon(Icons.bar_chart),
@@ -285,129 +272,6 @@ class HomeShellState extends ConsumerState<HomeShell> {
         });
         return const Center(child: CircularProgressIndicator());
       },
-    );
-  }
-
-  Future<void> _exportTodos(BuildContext context) async {
-    final scaffoldContext = context;
-    final confirm = await _showConfirmExportDialog(context);
-    if (confirm != true) {
-      if (mounted) Navigator.pop(scaffoldContext);
-      return;
-    }
-
-    final todos = ref.read(todoProvider);
-
-    if (kIsWeb) {
-      exportTodosWeb(todos);
-      if (mounted) {
-        Navigator.pop(scaffoldContext);
-        ScaffoldMessenger.of(scaffoldContext).showSnackBar(
-          const SnackBar(content: Text('Todos exported!')),
-        );
-      }
-      return;
-    }
-
-    final file = await exportTodos(todos);
-    if (mounted) {
-      Navigator.pop(scaffoldContext);
-      final message = file == null
-          ? 'Failed to export todos'
-          : 'Todos exported to: ${file.path}';
-      ScaffoldMessenger.of(scaffoldContext)
-          .showSnackBar(SnackBar(content: Text(message)));
-    }
-  }
-
-  Future<bool?> _showConfirmExportDialog(BuildContext context) {
-    return showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Confirm Export'),
-        content: const Text(
-            'Exporting will overwrite your existing task backup. Are you sure?'),
-        actions: [
-          TextButton(
-              onPressed: () => Navigator.of(context).pop(false),
-              child: const Text('Cancel')),
-          TextButton(
-              onPressed: () => Navigator.of(context).pop(true),
-              child: const Text('Export')),
-        ],
-      ),
-    );
-  }
-
-  Future<void> _confirmAndImportTodos(BuildContext context) async {
-    final scaffoldContext = context;
-    final confirm = await _showConfirmDialog(context);
-    if (confirm != true) {
-      if (mounted) Navigator.pop(scaffoldContext);
-      return;
-    }
-
-    _showLoadingDialog(context);
-
-    try {
-      List<Todo>? todos;
-      if (kIsWeb) {
-        todos = await importTodosWeb();
-      } else {
-        todos = await importTodos();
-      }
-      print("📥 Imported todos: ${todos?.length}");
-
-      if (todos != null) {
-        try {
-          await ref.read(todoProvider.notifier).setTodos(todos);
-        } catch (e) {
-          print("❌ Failed during setTodos: $e");
-        }
-      }
-
-      if (mounted) {
-        while (Navigator.of(context, rootNavigator: true).canPop()) {
-          Navigator.of(context, rootNavigator: true).pop();
-        }
-        final msg = todos == null ? 'Import canceled.' : 'Todos imported!';
-        ScaffoldMessenger.of(scaffoldContext)
-            .showSnackBar(SnackBar(content: Text(msg)));
-      }
-    } catch (e) {
-      if (mounted) {
-        Navigator.pop(context); // loading
-        Navigator.pop(scaffoldContext); // drawer
-        ScaffoldMessenger.of(scaffoldContext)
-            .showSnackBar(SnackBar(content: Text('Import failed: $e')));
-      }
-    }
-  }
-
-  Future<bool?> _showConfirmDialog(BuildContext context) {
-    return showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Confirm Import'),
-        content: const Text(
-            'Importing will overwrite your current tasks. Are you sure?'),
-        actions: [
-          TextButton(
-              onPressed: () => Navigator.of(context).pop(false),
-              child: const Text('Cancel')),
-          TextButton(
-              onPressed: () => Navigator.of(context).pop(true),
-              child: const Text('Import')),
-        ],
-      ),
-    );
-  }
-
-  void _showLoadingDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) => const Center(child: CircularProgressIndicator()),
     );
   }
 

@@ -6,7 +6,6 @@ import 'package:capstone_project/models/todo.dart';
 import 'package:capstone_project/utils/firebase_sync.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:hive/hive.dart';
 
 final todoProvider = StateNotifierProvider<TodoListNotifier, List<Todo>>((ref) {
   return TodoListNotifier();
@@ -16,9 +15,7 @@ final isSyncingProvider = StateProvider<bool>((ref) => false);
 
 class TodoListNotifier extends StateNotifier<List<Todo>> {
   TodoListNotifier() : super([]) {
-    final box = Hive.box<Todo>('todos');
-    final existingTodos = box.values.toList();
-    state = existingTodos;
+    state = [];
   }
 
   static int currId = 0;
@@ -32,7 +29,6 @@ class TodoListNotifier extends StateNotifier<List<Todo>> {
       category: category,
     );
     state = [...state, newTodo];
-    Hive.box<Todo>('todos').add(newTodo);
 
     try {
       if (kIsWeb || Platform.isAndroid) {
@@ -63,13 +59,6 @@ class TodoListNotifier extends StateNotifier<List<Todo>> {
           todo
     ];
 
-    final box = Hive.box<Todo>('todos');
-    final todoToComplete = box.values.firstWhere(
-      (todo) => todo.todoId == id.toString(),
-    );
-    todoToComplete.isCompleted = true;
-    await todoToComplete.save();
-
     if (updatedTodo != null) {
       try {
         if (kIsWeb || Platform.isAndroid) {
@@ -87,13 +76,6 @@ class TodoListNotifier extends StateNotifier<List<Todo>> {
   }
 
   Future<void> deleteTodo(int id) async {
-    final box = Hive.box<Todo>('todos');
-    final todoToDelete = box.values.firstWhere(
-      (todo) => todo.todoId == id.toString(),
-    );
-    _deletedIds.add(todoToDelete.todoId); // ✅ Track for deletion
-    await todoToDelete.delete();
-
     state = state.where((todo) => todo.todoId != id.toString()).toList();
   }
 
@@ -102,12 +84,6 @@ class TodoListNotifier extends StateNotifier<List<Todo>> {
       final firebaseSync = await FirebaseSync.create();
       final todos = await firebaseSync.syncFromCloud();
       state = todos;
-
-      final box = Hive.box<Todo>('todos');
-      await box.clear();
-      for (var todo in todos) {
-        await box.add(todo);
-      }
 
       final ids = todos.map((todo) => int.tryParse(todo.todoId) ?? -1).toList();
       final maxId = ids.isEmpty ? 0 : (ids.reduce((a, b) => a > b ? a : b));
@@ -128,22 +104,6 @@ class TodoListNotifier extends StateNotifier<List<Todo>> {
     } else {
       currId = 0;
     }
-
-    final box = Hive.box<Todo>('todos');
-    await box.clear();
-
-    print("🧠 Saving ${newTodos.length} todos to Hive");
-
-    for (final todo in newTodos) {
-      try {
-        await box.put(todo.todoId, todo);
-      } catch (e) {
-        print("❌ Hive put failed for ${todo.todoId}: $e");
-      }
-    }
-
-    await box.flush(); // 🧽 Ensures all writes complete
-    print("✅ All todos written to Hive");
   }
 
   Future<void> publishToFirebase() async {

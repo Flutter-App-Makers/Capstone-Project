@@ -12,7 +12,7 @@ final recurrentTaskProvider =
 class RecurrentTaskNotifier extends StateNotifier<List<RecurrentTask>> {
   RecurrentTaskNotifier() : super([]);
 
-  final _uuid = Uuid();
+  final _uuid = const Uuid();
   final Map<String, DateTime> _activeTasks = {};
 
   Future<void> addTask(String title) async {

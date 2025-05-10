@@ -15,7 +15,7 @@ class CompletedTodoSlidable extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Slidable(
       startActionPane: ActionPane(
-        motion: ScrollMotion(),
+        motion: const ScrollMotion(),
         children: [
           SlidableAction(
             onPressed: (context) =>
