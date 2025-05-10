@@ -6,10 +6,7 @@
 
 ## 🌐 Live Demo
 
-| URL | Description |
-|-----|-------------|
-| [https://perfectly-plump-plums-1c47d.web.app](https://perfectly-plump-plums-1c47d.web.app) | Primary Firebase Hosting URL |
-| [https://perfectly-plump-plums-1c47d.firebaseapp.com](https://perfectly-plump-plums-1c47d.firebaseapp.com) | Alternate Firebase Hosting URL |
+https://perfectly-plump-plums-1c47d.web.app/?flush
 
 ---
 
