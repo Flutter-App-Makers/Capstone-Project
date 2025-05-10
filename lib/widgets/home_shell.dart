@@ -79,7 +79,7 @@ class HomeShellState extends ConsumerState<HomeShell> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         title: Text(
-          "Tacklebox",
+          "TackleBox",
           style: GoogleFonts.notoSerif(
             fontSize: 24,
             fontWeight: FontWeight.bold,
