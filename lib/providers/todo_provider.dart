@@ -19,7 +19,7 @@ class TodoListNotifier extends StateNotifier<List<Todo>> {
   }
 
   static int currId = 0;
-  final Set<String> _deletedIds = {}; // Track deleted IDs
+  final Set<String> _deletedIds = {};
 
   Future<void> addTodo(String content, TodoCategory category) async {
     Todo newTodo = Todo(
@@ -86,7 +86,7 @@ class TodoListNotifier extends StateNotifier<List<Todo>> {
       state = todos; // Overwrite local state
       _deletedIds.clear(); // Clear deleted cache
 
-      // 🔄 Recompute next ID
+      // Recompute next ID
       final ids = todos.map((todo) => int.tryParse(todo.todoId) ?? -1).toList();
       final maxId = ids.isEmpty ? 0 : (ids.reduce((a, b) => a > b ? a : b));
       currId = maxId + 1;
