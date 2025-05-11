@@ -1,10 +1,10 @@
-# 🎣 Tacklebox: A Ghibli-Themed Todo App
+# TackleBox: A Ghibli-Themed To-do Application
 
-**Tacklebox** is a beautiful, minimal Flutter web application for managing todos and recurrent tasks — all wrapped in a cozy Studio Ghibli aesthetic. Built with ❤️, hosted on Firebase, and automated with GitHub Actions.
+**Tacklebox** is a minimal Flutter web application for managing one-off and recurrent tasks, all wrapped in a cozy Studio Ghibli aesthetic. It was built on Flutter via Dart, hosted on Firebase, and automated with GitHub Actions.
 
 ---
 
-## 🌐 Live Demo
+## Live Demo
 
 https://perfectly-plump-plums-1c47d.web.app
 
@@ -12,28 +12,26 @@ https://perfectly-plump-plums-1c47d.web.app
 
 ## Features
 
-- Add, complete, and delete todos
-- Recurrent task scheduling
-- Animated fish stats for completed tasks
-- Category management
-- Firebase Auth & Firestore sync
-- Local storage with Hive
-- Import/export todos via `.json`
-- GitHub Actions-powered CI/CD
+- Add, complete, and delete todos (one-off tasks)
+- Gamification of todo completion via fishing animations and collection
+- View todo task completion statistics
+- Add, track, and delete recurrent tasks
+- View recurrent task statistics and analytics via session time-tracking
+- Firebase auth and Firestore sync
+- GitHub Actions-powered CI/CD pipeline
 
 ---
 
-## 📦 Tech Stack
+## Tech Stack
 
 - **Flutter Web**
 - **Firebase Hosting, Auth, Firestore**
-- **Hive** for local persistence
 - **Riverpod** for state management
 - **GitHub Actions** for deployment
 
 ---
 
-## 🛠 Local Development
+## Local Development
 
 Clone the project:
 
@@ -62,7 +60,7 @@ flutter build web
 
 ---
 
-## 🚀 Deployment
+## Deployment
 
 All commits to `main` trigger an automatic deploy to Firebase Hosting via GitHub Actions.
 
@@ -75,7 +73,7 @@ firebase deploy
 
 ---
 
-## 🧪 Testing
+## Testing
 
 To run tests:
 
@@ -85,13 +83,12 @@ flutter test
 
 ---
 
-## 📄 License
+## License
 
 MIT — free to use, modify, and distribute. Attribution appreciated!
 
 ---
 
-## 🌱 Maintained by
+## Maintained by
 
-The ✨ Flutter-App-Makers ✨  
-(And our loyal assistant Omega 🧠)
+The Flutter-App-Makers (Mason, Mikey, Noah, and Sydney)
