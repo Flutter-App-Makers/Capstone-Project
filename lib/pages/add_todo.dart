@@ -1,4 +1,3 @@
-// lib/pages/add_todo.dart
 import 'package:capstone_project/models/todo.dart';
 import 'package:capstone_project/widgets/todo_category_dropdown.dart';
 import 'package:flutter/material.dart';
@@ -19,7 +18,7 @@ class _AddTodoState extends ConsumerState<AddTodo> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Add Todo")),
+      appBar: AppBar(title: const Text("Add TODO")),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: EdgeInsets.only(
@@ -38,7 +37,7 @@ class _AddTodoState extends ConsumerState<AddTodo> {
                     controller: todoController,
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
-                      labelText: 'What needs to be done?',
+                      labelText: 'What are we TODO?',
                     ),
                   ),
                   const SizedBox(height: 16),
@@ -63,7 +62,7 @@ class _AddTodoState extends ConsumerState<AddTodo> {
 
                       Navigator.pop(context);
                     },
-                    child: const Text('Add Todo'),
+                    child: const Text('Add TODO'),
                   ),
                 ],
               ),

@@ -72,7 +72,7 @@ class _NameEntryScreenState extends State<NameEntryScreen> {
                   child: Column(
                     children: [
                       Text(
-                        "🌱 Welcome!",
+                        "Welcome!",
                         style: theme.textTheme.headlineSmall,
                       ),
                       const SizedBox(height: 12),
@@ -85,7 +85,7 @@ class _NameEntryScreenState extends State<NameEntryScreen> {
                         controller: _controller,
                         decoration: InputDecoration(
                           border: const OutlineInputBorder(),
-                          hintText: "e.g. Yuno",
+                          hintText: "type your name here!",
                           errorText: _error,
                           fillColor: theme.colorScheme
                               // ignore: deprecated_member_use

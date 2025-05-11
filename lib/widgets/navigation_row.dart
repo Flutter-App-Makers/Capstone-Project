@@ -1,4 +1,3 @@
-// lib/widgets/nav_row.dart
 import 'package:capstone_project/pages/recurrent_task.dart';
 import 'package:flutter/material.dart';
 import '../pages/completed.dart';

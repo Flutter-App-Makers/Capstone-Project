@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../models/todo.dart';
 
-final categoryIcons = {
+final categoryIcons = { // shoutout icons packages fr
   TodoCategory.work: Icons.work,
   TodoCategory.personal: Icons.person,
   TodoCategory.shopping: Icons.shopping_cart,
@@ -47,5 +47,4 @@ final categoryColors = {
   TodoCategory.hobbies: Colors.teal,
   TodoCategory.music: Colors.purple,
   TodoCategory.games: Colors.indigo,
-  // Feel free to expand this however you like!
 };

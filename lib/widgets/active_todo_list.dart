@@ -1,4 +1,3 @@
-// lib/widgets/active_todo_list.dart
 import 'package:flutter/material.dart';
 import 'package:capstone_project/models/todo.dart';
 import 'package:capstone_project/widgets/active_todo_slidable.dart';

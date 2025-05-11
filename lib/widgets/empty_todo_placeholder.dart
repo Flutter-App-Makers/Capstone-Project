@@ -1,4 +1,3 @@
-// lib/widgets/empty_placeholder.dart
 import 'package:flutter/material.dart';
 
 class EmptyTodoPlaceholder extends StatelessWidget {
