@@ -19,7 +19,7 @@ class CompletedTodoSlidable extends ConsumerWidget {
         children: [
           SlidableAction(
             onPressed: (context) =>
-                ref.watch(todoProvider.notifier).deleteTodo(id),
+                ref.watch(todoProvider.notifier).deleteTodoLocal(id),
             backgroundColor: Colors.red,
             icon: Icons.delete,
             borderRadius: const BorderRadius.all(

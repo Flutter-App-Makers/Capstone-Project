@@ -31,7 +31,7 @@ class RecurrentTaskNotifier extends StateNotifier<List<RecurrentTask>> {
     state = [...state];
   }
 
-  void stopTask(String taskId) {
+  void stopTask(String taskId) async {
     final startTime = _activeTasks[taskId];
     if (startTime == null) return;
 
@@ -54,6 +54,8 @@ class RecurrentTaskNotifier extends StateNotifier<List<RecurrentTask>> {
     ];
 
     _activeTasks.remove(taskId);
+
+    await syncToFirebase();
   }
 
   Future<void> deleteTask(String taskId) async {
@@ -68,9 +70,9 @@ class RecurrentTaskNotifier extends StateNotifier<List<RecurrentTask>> {
   Future<void> syncFromFirebase() async {
     try {
       final downloaded = await downloadRecurrentTasks();
-      state = downloaded; // ✅ Clear deleted cache
+      state = downloaded;
     } catch (e, stack) {
-      print("🔥 Recurrent task sync failed: $e\n$stack");
+      print("Recurrent sync failed: $e\n$stack");
     }
   }
 

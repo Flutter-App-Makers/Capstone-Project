@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:capstone_project/providers/recurrent_task_provider.dart';
 import 'package:capstone_project/root_gate.dart';
 import 'package:capstone_project/widgets/catchable_fish.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -29,10 +30,18 @@ class HomeShellState extends ConsumerState<HomeShell> {
       isSyncing.state = true;
 
       try {
+        // Wait until FirebaseAuth has a user
+        while (FirebaseAuth.instance.currentUser == null) {
+          await Future.delayed(const Duration(milliseconds: 100));
+        }
+
+        print(
+            "FirebaseAuth ready for user: ${FirebaseAuth.instance.currentUser?.uid}");
+
         await ref.read(todoProvider.notifier).syncFromFirebase();
         await ref.read(recurrentTaskProvider.notifier).syncFromFirebase();
       } catch (e) {
-        print('🔥 Sync error: \$e');
+        print('Sync error: $e');
       } finally {
         isSyncing.state = false;
       }

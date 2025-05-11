@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../main.dart';
@@ -26,12 +27,20 @@ class _NameEntryScreenState extends State<NameEntryScreen> {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('username', name);
 
+    // ✅ Update FirebaseAuth user display name
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      await user.updateDisplayName(name);
+      await user.reload(); // Important to refresh the token
+    }
+
     Navigator.pushReplacement(
       // ignore: use_build_context_synchronously
       context,
       MaterialPageRoute(builder: (_) => const MyApp()),
     );
   }
+
 
   @override
   Widget build(BuildContext context) {

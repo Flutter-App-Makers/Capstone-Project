@@ -10,16 +10,16 @@ https://perfectly-plump-plums-1c47d.web.app
 
 ---
 
-## ✨ Features
+## Features
 
-- ✅ Add, complete, and delete todos
-- 🔁 Recurrent task scheduling
-- 🐟 Animated fish stats for completed tasks
-- 🗂️ Category management
-- ☁️ Firebase Auth & Firestore sync
-- 💾 Local storage with Hive
-- 📤 Import/export todos via `.json`
-- 🚀 GitHub Actions-powered CI/CD
+- Add, complete, and delete todos
+- Recurrent task scheduling
+- Animated fish stats for completed tasks
+- Category management
+- Firebase Auth & Firestore sync
+- Local storage with Hive
+- Import/export todos via `.json`
+- GitHub Actions-powered CI/CD
 
 ---
 
