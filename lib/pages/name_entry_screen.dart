@@ -27,7 +27,7 @@ class _NameEntryScreenState extends State<NameEntryScreen> {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('username', name);
 
-    // ✅ Update FirebaseAuth user display name
+    // Update FirebaseAuth user display name
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
       await user.updateDisplayName(name);
@@ -89,7 +89,7 @@ class _NameEntryScreenState extends State<NameEntryScreen> {
                           errorText: _error,
                           fillColor: theme.colorScheme
                               // ignore: deprecated_member_use
-                              .surfaceVariant, // ✅ Compatible with Flutter 3.19.6
+                              .surfaceVariant, // Compatible with Flutter 3.19.6
                           filled: true,
                         ),
                       ),
