@@ -110,7 +110,7 @@ class TodoListNotifier extends StateNotifier<List<Todo>> {
 
   Future<void> publishToFirebase() async {
     try {
-      // Upload all current todos
+      // Upload all current todos to firebase
       for (final todo in state) {
         await uploadTodo(todo);
       }
