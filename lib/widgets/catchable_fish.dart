@@ -84,12 +84,12 @@ class CatchableFishState extends State<CatchableFish>
               double fishY;
 
               if (progress < 0.5) {
-                // Phase 1: line grows down
+                // line grows down
                 lineHeight = fishStartY * (progress / 0.5);
                 hookY = lineHeight;
                 fishY = fishStartY; // stays still
               } else {
-                // Phase 2: line retracts and pulls fish
+                // line retracts and pulls fish
                 final t = (progress - 0.5) / 0.5;
                 final liftAmount = fishStartY * t;
                 lineHeight = fishStartY - liftAmount;
@@ -99,7 +99,7 @@ class CatchableFishState extends State<CatchableFish>
 
               return Stack(
                 children: [
-                  // 🎣 Fishing line
+                  // fishing line
                   Positioned(
                     left: widget.center.dx + 30,
                     top: 0,
@@ -110,14 +110,14 @@ class CatchableFishState extends State<CatchableFish>
                     ),
                   ),
 
-                  // 🪝 Hook at bottom of line
+                  // hook at bottom of line
                   Positioned(
                     left: widget.center.dx + 22,
                     top: hookY,
                     child: Image.asset('assets/hook.png', width: 16),
                   ),
 
-                  // 🐟 Fish follows hook only during retract
+                  // fish follows hook only during retract
                   Positioned(
                     left: widget.center.dx,
                     top: fishY,

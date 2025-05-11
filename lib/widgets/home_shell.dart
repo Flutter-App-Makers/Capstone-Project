@@ -173,9 +173,9 @@ class HomeShellState extends ConsumerState<HomeShell> {
               ),
               child: Stack(
                 children: [
-                  ..._buildDecorations(), // 🎨 Ghibli cloud + Totoro forest decorations
+                  ..._buildDecorations(), // Ghibli cloud + Totoro forest decorations
 
-                  // 🐟 Fish layer
+                  // layer for fishies
                   ...todos.asMap().entries.map((entry) {
                     final i = entry.key;
                     final todo = entry.value;
@@ -197,7 +197,7 @@ class HomeShellState extends ConsumerState<HomeShell> {
                       swimDuration: Duration(
                           seconds: 3 + Random(todo.todoId.hashCode).nextInt(3)),
                       onCaught: () {
-                        // optional sparkle or sound
+                        // TODO: if time, add sounds, splashes
                       },
                     );
                   }),

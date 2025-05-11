@@ -41,7 +41,7 @@ void main() async {
         await user.updateDisplayName(username);
         await user.reload();
         await FirebaseAuth.instance.currentUser
-            ?.getIdToken(true); // 🔥 force refresh
+            ?.getIdToken(true); // force refresh
 
         print("Updated displayName to '$username'");
       }

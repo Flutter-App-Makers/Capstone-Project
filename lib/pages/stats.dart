@@ -28,7 +28,7 @@ class StatsPage extends ConsumerWidget {
       body: SafeArea(
         child: Stack(
           children: [
-            // 🎨 Background Ghibli art
+            // Background Ghibli art
             ...List.generate(4, (i) {
               final left = random.nextDouble() * screenSize.width;
               final top = random.nextDouble() * screenSize.height;
@@ -43,7 +43,7 @@ class StatsPage extends ConsumerWidget {
               );
             }),
 
-            // 📊 Stats chart
+            // Statistics page
             Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -64,7 +64,7 @@ class StatsPage extends ConsumerWidget {
               ),
             ),
 
-            // 🐟 Fish float over everything
+            // Fish float over everything
             IgnorePointer(
               child: Stack(
                 children: visibleFish.map((todo) {
