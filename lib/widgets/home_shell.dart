@@ -217,7 +217,7 @@ class HomeShellState extends ConsumerState<HomeShell> {
               Navigator.pushNamed(context, '/addTodo');
             },
             icon: const Icon(Icons.add),
-            label: const Text("Add Todo"),
+            label: const Text("Add TODO"),
           ),
         ],
       ),

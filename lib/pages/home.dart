@@ -9,7 +9,6 @@ import '../providers/todo_provider.dart';
 class MyHomePage extends ConsumerWidget {
   const MyHomePage({super.key});
 
-  // lib/pages/home.dart
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final todos = ref.watch(todoProvider);
